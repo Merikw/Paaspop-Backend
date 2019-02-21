@@ -5,14 +5,13 @@ namespace PaaspopService.Persistence.Mappers
 {
     public class PerformanceMapper
     {
-        private PerformanceMapper() { }
+        private PerformanceMapper()
+        {
+        }
 
         public static void Map()
         {
-            BsonClassMap.RegisterClassMap<Performance>(performanceMap =>
-            {
-                performanceMap.AutoMap();
-            });
+            BsonClassMap.RegisterClassMap<Performance>(performanceMap => { performanceMap.AutoMap(); });
         }
     }
 }

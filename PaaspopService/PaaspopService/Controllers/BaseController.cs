@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace PaaspopService.WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -11,12 +12,7 @@ namespace PaaspopService.WebApi.Controllers
 
         protected IMediator GetMediator()
         {
-            if(_mediator == null)
-            {
-                _mediator = HttpContext.RequestServices.GetService<IMediator>();
-            };
-
-            return _mediator;
+            return _mediator ?? (_mediator = HttpContext.RequestServices.GetService<IMediator>());
         }
     }
 }

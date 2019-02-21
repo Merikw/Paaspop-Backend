@@ -1,32 +1,27 @@
-﻿using MediatR;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoMapper;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using PaaspopService.Application.Artists.Models;
+using PaaspopService.Application.Infrastructure;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Persistence.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace PaaspopService.Application.Artists.Queries
 {
-    public class GetArtistsQueryHandler : IRequestHandler<GetArtistQuery, ArtistViewModel>
+    public class GetArtistsQueryHandler : GeneralRequestHandler<GetArtistQuery, ArtistViewModel>
     {
-        private readonly IDBContext _context;
-
-        public GetArtistsQueryHandler(IDBContext context)
+        public GetArtistsQueryHandler(IDbContext context, IMapper mapper)
+            : base(context, mapper)
         {
-            _context = context;
         }
 
-        public async Task<ArtistViewModel> Handle(GetArtistQuery request, CancellationToken cancellationToken)
+        public override async Task<ArtistViewModel> Handle(GetArtistQuery request, CancellationToken cancellationToken)
         {
-            var filter = Builders<Artist>.Filter.Eq("Id", request.Id);
-            var result =  _context.GetArtistsCollection().Find(filter).FirstOrDefault();
+            var filter = Builders<Artist>.Filter.Eq("_id", ObjectId.Parse(request.Id));
+            var result = await Context.GetArtistsCollection().FindAsync(filter, cancellationToken: cancellationToken);
 
-            return ArtistViewModel.Create(result);
+            return Mapper.Map<ArtistViewModel>(result.FirstOrDefault());
         }
     }
 }

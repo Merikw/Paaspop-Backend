@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.ValueObjects;
 
-namespace PaaspopService.Domain.Entities
+namespace PaaspopService.Application.Artists.Queries
 {
-    public class Artist : Model
+    public class ArtistViewModel : Model
     {
         public string Name { get; set; }
         public UrlLink ImageLink { get; set; }

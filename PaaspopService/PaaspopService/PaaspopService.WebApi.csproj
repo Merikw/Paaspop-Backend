@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="FluentValidation" Version="8.1.3" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.1.3" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="6.0.1" />
@@ -19,8 +20,6 @@
     <ProjectReference Include="..\PaaspopService.Application\PaaspopService.Application.csproj" />
     <ProjectReference Include="..\PaaspopService.Common\PaaspopService.Common.csproj" />
     <ProjectReference Include="..\PaaspopService.Domain\PaaspopService.Domain.csproj" />
-    <ProjectReference Include="..\PaaspopService.Infrastructure\PaaspopService.Infrastructure.csproj" />
-    <ProjectReference Include="..\PaaspopService.Persistence\PaaspopService.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

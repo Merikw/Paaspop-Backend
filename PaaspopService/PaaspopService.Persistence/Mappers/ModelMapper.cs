@@ -6,7 +6,9 @@ namespace PaaspopService.Persistence.Mappers
 {
     public class ModelMapper
     {
-        private ModelMapper() { }
+        private ModelMapper()
+        {
+        }
 
         public static void Map()
         {

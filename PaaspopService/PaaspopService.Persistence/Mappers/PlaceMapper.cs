@@ -5,14 +5,13 @@ namespace PaaspopService.Persistence.Mappers
 {
     public class PlaceMapper
     {
-        private PlaceMapper() { }
+        private PlaceMapper()
+        {
+        }
 
         public static void Map()
         {
-            BsonClassMap.RegisterClassMap<Place>(placeMap =>
-            {
-                placeMap.AutoMap();
-            });
+            BsonClassMap.RegisterClassMap<Place>(placeMap => { placeMap.AutoMap(); });
         }
     }
 }

@@ -1,37 +1,29 @@
-﻿using PaaspopService.Common.Handlers;
+﻿using System.Collections.Generic;
+using PaaspopService.Common.Handlers;
 using PaaspopService.Domain.Exceptions;
 using PaaspopService.Domain.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PaaspopService.Domain.ValueObjects
 {
     public class Percentage : ValueObject
     {
-        public int AbsolutePercentage { get; private set; }
+        public int AbsolutePercentage { get; }
 
-        private Percentage() { }
-
-        public static Percentage Create(int partOftotal, int total)
+        private Percentage()
         {
-            return new Percentage
-            {
-                AbsolutePercentage = (partOftotal / total) * 100
-            };
         }
 
-        public static Percentage Create(int total)
+        public Percentage(int partOftotal, int total)
         {
-            if(BetweenHandler.IsInBetween(total, 0, 100))
-            {
-                return new Percentage
-                {
-                    AbsolutePercentage = total
-                };
-            }
+            AbsolutePercentage = partOftotal / total * 100;
+        }
 
-            throw new PercentageInvalidException(total);
+        public Percentage(int total)
+        {
+            if (BetweenHandler.IsInBetween(total, 0, 100))
+                AbsolutePercentage = total;
+            else
+                throw new PercentageInvalidException(total);
         }
 
         public static implicit operator string(Percentage percentage)
@@ -41,7 +33,7 @@ namespace PaaspopService.Domain.ValueObjects
 
         public static explicit operator Percentage(int total)
         {
-            return Create(total);
+            return new Percentage(total);
         }
 
         public override string ToString()

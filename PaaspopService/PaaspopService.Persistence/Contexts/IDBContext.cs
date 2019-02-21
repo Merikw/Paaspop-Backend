@@ -3,7 +3,7 @@ using PaaspopService.Domain.Entities;
 
 namespace PaaspopService.Persistence.Contexts
 {
-    public interface IDBContext
+    public interface IDbContext
     {
         IMongoCollection<User> GetUsersCollection();
         IMongoCollection<Performance> GetPerformanceCollection();

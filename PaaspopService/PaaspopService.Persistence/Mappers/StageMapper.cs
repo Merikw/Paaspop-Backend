@@ -5,14 +5,13 @@ namespace PaaspopService.Persistence.Mappers
 {
     public class StageMapper
     {
-        private StageMapper() { }
+        private StageMapper()
+        {
+        }
 
         public static void Map()
         {
-            BsonClassMap.RegisterClassMap<Stage>(stageMap =>
-            {
-                stageMap.AutoMap();
-            });
+            BsonClassMap.RegisterClassMap<Stage>(stageMap => { stageMap.AutoMap(); });
         }
     }
 }

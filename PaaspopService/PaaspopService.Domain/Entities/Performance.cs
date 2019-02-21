@@ -1,7 +1,5 @@
-﻿using PaaspopService.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Domain.Entities
 {

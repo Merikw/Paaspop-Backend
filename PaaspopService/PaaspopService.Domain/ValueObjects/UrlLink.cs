@@ -1,30 +1,25 @@
-﻿using PaaspopService.Domain.Exceptions;
-using PaaspopService.Domain.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using PaaspopService.Domain.Exceptions;
+using PaaspopService.Domain.Infrastructure;
 
 namespace PaaspopService.Domain.ValueObjects
 {
     public class UrlLink : ValueObject
     {
-        public string UrlText { get; private set; }
-        public Uri Url { get; private set; }
+        public string UrlText { get; }
 
-        private UrlLink() { }
-
-        public static UrlLink Create(string urlText)
+        private UrlLink()
         {
-            Uri url;
-            if (Uri.TryCreate(urlText, UriKind.Absolute, out url)
+        }
+
+        public UrlLink(string urlText)
+        {
+            if (Uri.TryCreate(urlText, UriKind.Absolute, out var url)
                 && (url.Scheme == Uri.UriSchemeHttp || url.Scheme == Uri.UriSchemeHttps))
-            {
-                return new UrlLink
-                {
-                    UrlText = urlText,
-                    Url = url
-                };
-            }
-            throw new UrlLinkInvalidException(urlText);
+                UrlText = urlText;
+            else
+                throw new UrlLinkInvalidException(urlText);
         }
 
         public static implicit operator string(UrlLink urlLink)
@@ -34,7 +29,7 @@ namespace PaaspopService.Domain.ValueObjects
 
         public static explicit operator UrlLink(string url)
         {
-            return Create(url);
+            return new UrlLink(url);
         }
 
         public override string ToString()
@@ -44,7 +39,6 @@ namespace PaaspopService.Domain.ValueObjects
 
         protected override IEnumerable<object> GetAtomicValues()
         {
-            yield return Url;
             yield return UrlText;
         }
     }

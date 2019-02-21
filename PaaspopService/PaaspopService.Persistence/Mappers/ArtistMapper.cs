@@ -5,13 +5,13 @@ namespace PaaspopService.Persistence.Mappers
 {
     public class ArtistMapper
     {
-        private ArtistMapper() { }
+        private ArtistMapper()
+        {
+        }
 
-        public static void Map() {
-            BsonClassMap.RegisterClassMap<Artist>(artistMap =>
-            {
-                artistMap.AutoMap();
-            });
+        public static void Map()
+        {
+            BsonClassMap.RegisterClassMap<Artist>(artistMap => { artistMap.AutoMap(); });
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PaaspopService.Domain.Entities
 {

@@ -17,8 +17,7 @@ namespace PaaspopService.Application.Infrastructure.Requests
         public Task Process(TRequest request, CancellationToken cancellationToken)
         {
             var name = typeof(TRequest).Name;
-            _logger.LogInformation("Northwind Request: {Name} {@Request}", name, request);
-
+            _logger.LogInformation("Paaspop service Request: {Name} {@Request}", name, request);
             return Task.CompletedTask;
         }
     }

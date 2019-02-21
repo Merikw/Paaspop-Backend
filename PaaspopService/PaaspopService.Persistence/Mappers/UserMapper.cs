@@ -5,14 +5,13 @@ namespace PaaspopService.Persistence.Mappers
 {
     public class UserMapper
     {
-        private UserMapper() { }
+        private UserMapper()
+        {
+        }
 
         public static void Map()
         {
-            BsonClassMap.RegisterClassMap<User>(userMap =>
-            {
-                userMap.AutoMap();
-            });
+            BsonClassMap.RegisterClassMap<User>(userMap => { userMap.AutoMap(); });
         }
     }
 }
