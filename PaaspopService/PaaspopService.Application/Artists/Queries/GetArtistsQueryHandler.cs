@@ -19,7 +19,7 @@ namespace PaaspopService.Application.Artists.Queries
         public override async Task<ArtistViewModel> Handle(GetArtistQuery request, CancellationToken cancellationToken)
         {
             var filter = Builders<Artist>.Filter.Eq("_id", ObjectId.Parse(request.Id));
-            var result = await Context.GetArtistsCollection().FindAsync(filter, cancellationToken: cancellationToken);
+            var result = await Context.GetArtists().FindAsync(filter, cancellationToken: cancellationToken);
 
             return Mapper.Map<ArtistViewModel>(result.FirstOrDefault());
         }

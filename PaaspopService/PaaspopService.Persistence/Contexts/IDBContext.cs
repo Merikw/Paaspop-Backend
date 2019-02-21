@@ -5,10 +5,10 @@ namespace PaaspopService.Persistence.Contexts
 {
     public interface IDbContext
     {
-        IMongoCollection<User> GetUsersCollection();
-        IMongoCollection<Performance> GetPerformanceCollection();
-        IMongoCollection<Place> GetPlaceCollection();
-        IMongoCollection<Stage> GetStagesCollection();
-        IMongoCollection<Artist> GetArtistsCollection();
+        IMongoCollection<User> GetUsers();
+        IMongoCollection<Performance> GetPerformances();
+        IMongoCollection<Place> GetPlaces();
+        IMongoCollection<Stage> GetStages();
+        IMongoCollection<Artist> GetArtists();
     }
 }

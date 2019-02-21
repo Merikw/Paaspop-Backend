@@ -15,27 +15,27 @@ namespace PaaspopService.Persistence.Contexts
             _database = client.GetDatabase(settings.Value.Database);
         }
 
-        public IMongoCollection<User> GetUsersCollection()
+        public IMongoCollection<User> GetUsers()
         {
             return _database.GetCollection<User>("Users");
         }
 
-        public IMongoCollection<Performance> GetPerformanceCollection()
+        public IMongoCollection<Performance> GetPerformances()
         {
             return _database.GetCollection<Performance>("Performances");
         }
 
-        public IMongoCollection<Place> GetPlaceCollection()
+        public IMongoCollection<Place> GetPlaces()
         {
             return _database.GetCollection<Place>("Places");
         }
 
-        public IMongoCollection<Stage> GetStagesCollection()
+        public IMongoCollection<Stage> GetStages()
         {
             return _database.GetCollection<Stage>("Stages");
         }
 
-        public IMongoCollection<Artist> GetArtistsCollection()
+        public IMongoCollection<Artist> GetArtists()
         {
             return _database.GetCollection<Artist>("Artists");
         }
