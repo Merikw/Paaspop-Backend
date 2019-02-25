@@ -1,27 +1,26 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using MongoDB.Bson;
-using MongoDB.Driver;
 using PaaspopService.Application.Infrastructure;
+using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Domain.Entities;
-using PaaspopService.Persistence.Contexts;
 
 namespace PaaspopService.Application.Artists.Queries
 {
     public class GetArtistsQueryHandler : GeneralRequestHandler<GetArtistQuery, ArtistViewModel>
     {
-        public GetArtistsQueryHandler(IDbContext context, IMapper mapper)
-            : base(context, mapper)
+        private readonly IArtistsRepository _artistsRepository;
+
+        public GetArtistsQueryHandler(IMapper mapper, IArtistsRepository artistsRepository)
+            : base(mapper)
         {
+            _artistsRepository = artistsRepository;
         }
 
         public override async Task<ArtistViewModel> Handle(GetArtistQuery request, CancellationToken cancellationToken)
         {
-            var filter = Builders<Artist>.Filter.Eq("_id", ObjectId.Parse(request.Id));
-            var result = await Context.GetArtists().FindAsync(filter, cancellationToken: cancellationToken);
-
-            return Mapper.Map<ArtistViewModel>(result.FirstOrDefault());
+            Artist result = await _artistsRepository.GetArtistById(request.Id, cancellationToken);
+            return Mapper.Map<ArtistViewModel>(result);
         }
     }
 }

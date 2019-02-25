@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PaaspopService.Domain\PaaspopService.Domain.csproj" />
-    <ProjectReference Include="..\PaaspopService.Persistence\PaaspopService.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
