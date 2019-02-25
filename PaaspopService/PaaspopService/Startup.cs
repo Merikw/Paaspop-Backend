@@ -9,11 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver.Core.Configuration;
+using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
 using PaaspopService.Application.Infrastructure.Validators;
 using PaaspopService.Common.Middleware;
 using PaaspopService.Persistence.Contexts;
 using PaaspopService.Persistence.Mappers;
+using PaaspopService.Persistence.Repositories;
 using PaaspopService.Persistence.Settings;
 using static System.String;
 
@@ -46,6 +48,7 @@ namespace PaaspopService.WebApi
                 .AddSingleton<IDbContext, MongoDbContext>()
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
+                .AddTransient<IArtistsRepository, ArtistsRepositoryMongoDb>()
                 .AddMediatR();
 
             services.Configure<MongoDbSettings>(options =>
