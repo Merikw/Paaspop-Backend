@@ -34,14 +34,10 @@ namespace ControllerTests
                 Age = 80,
                 Gender = 1
             };
-
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-
-            // Act
             var response = await _client.PostAsync("/api/users", stringContent);
 
-            // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
@@ -53,14 +49,10 @@ namespace ControllerTests
                 Age = -1,
                 Gender = 1
             };
-
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-
-            // Act
             var response = await _client.PostAsync("/api/users", stringContent);
 
-            // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
@@ -72,14 +64,10 @@ namespace ControllerTests
                 Age = 80,
                 Gender = 3
             };
-
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-
-            // Act
             var response = await _client.PostAsync("/api/users", stringContent);
 
-            // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
