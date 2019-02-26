@@ -17,8 +17,7 @@ namespace ControllerTests
     {
         public UsersControllerTest()
         {
-            // Arrange
-            TestServer server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+            var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
             _client = server.CreateClient();
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(
