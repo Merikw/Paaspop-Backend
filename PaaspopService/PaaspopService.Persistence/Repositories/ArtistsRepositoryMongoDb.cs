@@ -8,19 +8,16 @@ using PaaspopService.Persistence.Contexts;
 
 namespace PaaspopService.Persistence.Repositories
 {
-    public class ArtistsRepositoryMongoDb : IArtistsRepository
+    public class ArtistsRepositoryMongoDb : GeneralRepository, IArtistsRepository
     {
-        private readonly IDbContext _dbContext;
-
-        public ArtistsRepositoryMongoDb(IDbContext context)
+        public ArtistsRepositoryMongoDb(IDbContext context) : base(context)
         {
-            _dbContext = context;
         }
 
         public async Task<Artist> GetArtistById(string id, CancellationToken cancellationToken)
         {
             var filter = Builders<Artist>.Filter.Eq("_id", ObjectId.Parse(id));
-            var result = await _dbContext.GetArtists().FindAsync(filter, cancellationToken: cancellationToken);
+            var result = await DbContext.GetArtists().FindAsync(filter, cancellationToken: cancellationToken);
             return result.FirstOrDefault();
         }
     }

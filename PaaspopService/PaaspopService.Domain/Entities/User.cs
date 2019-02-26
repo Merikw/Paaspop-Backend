@@ -8,9 +8,9 @@ namespace PaaspopService.Domain.Entities
     {
         public Gender Gender { get; set; }
         public Age Age { get; set; }
-        public bool WantsWeatherForecast { get; set; }
-        public bool WantsWaterDrinkNotification { get; set; }
-        public LocationCoordinate CurrentLocation { get; set; }
-        public ISet<Performance> FavoritePerformances { get; set; }
+        public bool WantsWeatherForecast { get; set; } = true;
+        public bool WantsWaterDrinkNotification { get; set; } = true;
+        public LocationCoordinate CurrentLocation { get; set; } = null;
+        public ISet<Performance> FavoritePerformances { get; set; } = new HashSet<Performance>();
     }
 }

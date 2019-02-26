@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver.Core.Configuration;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
@@ -35,12 +36,10 @@ namespace PaaspopService.WebApi
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            GeneralMapper.Map();
-
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(validator =>
-                    validator.RegisterValidatorsFromAssemblyContaining<ArtistViewModelValidator>());
+                    validator.RegisterValidatorsFromAssemblyContaining<GetArtistValidator>());
 
             services.AddAutoMapper();
 
@@ -49,7 +48,11 @@ namespace PaaspopService.WebApi
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddTransient<IArtistsRepository, ArtistsRepositoryMongoDb>()
+                .AddTransient<IUsersRepository, UsersRepositoryMongoDb>()
                 .AddMediatR();
+
+            if (!BsonClassMap.IsClassMapRegistered(typeof(GeneralMapper)))
+                BsonClassMap.RegisterClassMap<GeneralMapper>();
 
             services.Configure<MongoDbSettings>(options =>
             {
