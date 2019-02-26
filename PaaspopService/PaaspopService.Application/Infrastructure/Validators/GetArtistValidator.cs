@@ -3,9 +3,9 @@ using PaaspopService.Application.Artists.Queries;
 
 namespace PaaspopService.Application.Infrastructure.Validators
 {
-    public class ArtistViewModelValidator : AbstractValidator<GetArtistQuery>
+    public class GetArtistValidator : AbstractValidator<GetArtistQuery>
     {
-        public ArtistViewModelValidator()
+        public GetArtistValidator()
         {
             RuleFor(req => req.Id).NotEmpty().Length(24);
         }

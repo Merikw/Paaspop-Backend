@@ -7,8 +7,6 @@ namespace PaaspopService.Domain.ValueObjects
 {
     public class UrlLink : ValueObject
     {
-        public string UrlText { get; }
-
         private UrlLink()
         {
         }
@@ -21,6 +19,8 @@ namespace PaaspopService.Domain.ValueObjects
             else
                 throw new UrlLinkInvalidException(urlText);
         }
+
+        public string UrlText { get; }
 
         public static implicit operator string(UrlLink urlLink)
         {

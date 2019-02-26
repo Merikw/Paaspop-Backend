@@ -11,7 +11,7 @@ namespace PaaspopService.Persistence.Contexts
 
         public MongoDbContext(IOptions<MongoDbSettings> settings)
         {
-            MongoClient client = new MongoClient(settings.Value.ConnectionString);
+            var client = new MongoClient(settings.Value.ConnectionString);
             _database = client.GetDatabase(settings.Value.Database);
         }
 

@@ -7,9 +7,6 @@ namespace PaaspopService.Domain.ValueObjects
 {
     public class LocationCoordinate : ValueObject
     {
-        public double Latitude { get; }
-        public double Longitude { get; }
-
         private LocationCoordinate()
         {
         }
@@ -24,6 +21,9 @@ namespace PaaspopService.Domain.ValueObjects
 
             throw new LocationCoordinateInvalidException(latitude, longitude);
         }
+
+        public double Latitude { get; }
+        public double Longitude { get; }
 
         protected override IEnumerable<object> GetAtomicValues()
         {

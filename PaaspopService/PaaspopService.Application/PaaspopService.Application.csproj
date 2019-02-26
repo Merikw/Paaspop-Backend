@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Performances\" />
-    <Folder Include="Users\" />
     <Folder Include="Stages\" />
     <Folder Include="Places\" />
   </ItemGroup>

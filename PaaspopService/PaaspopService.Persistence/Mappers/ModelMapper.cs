@@ -14,7 +14,7 @@ namespace PaaspopService.Persistence.Mappers
         {
             BsonClassMap.RegisterClassMap<Model>(modelMap =>
             {
-                modelMap.MapIdMember(model => model.Id).SetIdGenerator(CombGuidGenerator.Instance);
+                modelMap.MapIdMember(model => model.Id).SetIdGenerator(ObjectIdGenerator.Instance);
             });
         }
     }
