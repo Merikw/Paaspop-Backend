@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
-using PaaspopService.Domain.Entities;
 
 namespace PaaspopService.Application.Artists.Queries
 {
@@ -19,7 +18,7 @@ namespace PaaspopService.Application.Artists.Queries
 
         public override async Task<ArtistViewModel> Handle(GetArtistQuery request, CancellationToken cancellationToken)
         {
-            Artist result = await _artistsRepository.GetArtistById(request.Id, cancellationToken);
+            var result = await _artistsRepository.GetArtistById(request.Id, cancellationToken);
             return Mapper.Map<ArtistViewModel>(result);
         }
     }

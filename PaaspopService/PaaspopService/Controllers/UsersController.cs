@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PaaspopService.Application.Artists.Queries;
 using PaaspopService.Application.Users.Commands.CreateUser;
 
 namespace PaaspopService.WebApi.Controllers
@@ -10,7 +9,7 @@ namespace PaaspopService.WebApi.Controllers
     public class UsersController : BaseController
     {
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]CreateUserCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
             await GetMediator().Send(command);
 

@@ -13,8 +13,8 @@ namespace PaaspopService.Application.Infrastructure.Requests
     public class RequestValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
         private readonly ILogger _logger;
+        private readonly IEnumerable<IValidator<TRequest>> _validators;
 
         public RequestValidationBehavior(IEnumerable<IValidator<TRequest>> validators, ILogger<TRequest> logger)
         {

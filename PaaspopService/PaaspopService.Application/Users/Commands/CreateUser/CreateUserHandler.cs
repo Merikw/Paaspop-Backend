@@ -19,7 +19,7 @@ namespace PaaspopService.Application.Users.Commands.CreateUser
 
         public override async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            User userToBeCreated = Mapper.Map<User>(request);
+            var userToBeCreated = Mapper.Map<User>(request);
             await _usersRepository.CreateUserAsync(userToBeCreated);
             return Unit.Value;
         }

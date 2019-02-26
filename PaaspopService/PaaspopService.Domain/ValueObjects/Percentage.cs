@@ -7,8 +7,6 @@ namespace PaaspopService.Domain.ValueObjects
 {
     public class Percentage : ValueObject
     {
-        public int AbsolutePercentage { get; }
-
         private Percentage()
         {
         }
@@ -25,6 +23,8 @@ namespace PaaspopService.Domain.ValueObjects
             else
                 throw new PercentageInvalidException(total);
         }
+
+        public int AbsolutePercentage { get; }
 
         public static implicit operator string(Percentage percentage)
         {
