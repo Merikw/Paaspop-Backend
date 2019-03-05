@@ -71,7 +71,6 @@ namespace PaaspopService.WebApi
             else
                 app.UseHsts();
 
-            app.UseHttpsRedirection();
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
             app.UseMvc();
         }
