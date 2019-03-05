@@ -11,9 +11,9 @@ namespace PaaspopService.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
-            await GetMediator().Send(command);
+            var result = await GetMediator().Send(command);
 
-            return Ok();
+            return Ok(result);
         }
     }
 }

@@ -8,7 +8,7 @@ using PaaspopService.Domain.Entities;
 
 namespace PaaspopService.Application.Users.Commands.CreateUser
 {
-    public class CreateUserHandler : GeneralRequestHandler<CreateUserCommand, Unit>
+    public class CreateUserHandler : GeneralRequestHandler<CreateUserCommand, User>
     {
         private readonly IUsersRepository _usersRepository;
 
@@ -17,11 +17,11 @@ namespace PaaspopService.Application.Users.Commands.CreateUser
             _usersRepository = usersRepository;
         }
 
-        public override async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public override async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var userToBeCreated = Mapper.Map<User>(request);
             await _usersRepository.CreateUserAsync(userToBeCreated);
-            return Unit.Value;
+            return userToBeCreated;
         }
     }
 }
