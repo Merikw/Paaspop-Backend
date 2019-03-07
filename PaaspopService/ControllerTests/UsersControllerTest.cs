@@ -15,17 +15,6 @@ namespace ControllerTests
 {
     public class UsersControllerTest
     {
-        public UsersControllerTest()
-        {
-            var server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
-            _client = server.CreateClient();
-            _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-        }
-
-        private readonly HttpClient _client;
-
         [Fact]
         public async Task CreateUser_Correct()
         {
@@ -36,7 +25,7 @@ namespace ControllerTests
             };
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("/api/users", stringContent);
+            var response = await GeneralControllerTest.Instance.Client.PostAsync("/api/users", stringContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
@@ -51,7 +40,7 @@ namespace ControllerTests
             };
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("/api/users", stringContent);
+            var response = await GeneralControllerTest.Instance.Client.PostAsync("/api/users", stringContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
@@ -66,7 +55,7 @@ namespace ControllerTests
             };
             var stringContent =
                 new StringContent(JsonConvert.SerializeObject(input), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("/api/users", stringContent);
+            var response = await GeneralControllerTest.Instance.Client.PostAsync("/api/users", stringContent);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }

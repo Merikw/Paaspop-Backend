@@ -18,8 +18,6 @@ namespace PaaspopService.Domain.ValueObjects
 
             Latitude = latitude;
             Longitude = longitude;
-
-            throw new LocationCoordinateInvalidException(latitude, longitude);
         }
 
         public double Latitude { get; }

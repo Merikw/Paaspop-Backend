@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
-using MongoDB.Driver.Core.Configuration;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
 using PaaspopService.Application.Infrastructure.Validators;
@@ -18,7 +17,6 @@ using PaaspopService.Persistence.Contexts;
 using PaaspopService.Persistence.Mappers;
 using PaaspopService.Persistence.Repositories;
 using PaaspopService.Persistence.Settings;
-using static System.String;
 
 namespace PaaspopService.WebApi
 {
@@ -49,10 +47,17 @@ namespace PaaspopService.WebApi
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddTransient<IArtistsRepository, ArtistsRepositoryMongoDb>()
                 .AddTransient<IUsersRepository, UsersRepositoryMongoDb>()
+                .AddTransient<IPerformancesRepository, PerformancesRepositoryMongoDb>()
                 .AddMediatR();
 
             if (!BsonClassMap.IsClassMapRegistered(typeof(GeneralMapper)))
-                BsonClassMap.RegisterClassMap<GeneralMapper>();
+            {
+                try
+                {
+                    BsonClassMap.RegisterClassMap<GeneralMapper>();
+                }
+                catch (ArgumentException exception) { }
+            }
 
             services.Configure<MongoDbSettings>(options =>
             {
