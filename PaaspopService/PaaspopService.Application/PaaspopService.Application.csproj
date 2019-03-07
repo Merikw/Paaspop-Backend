@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Performances\" />
+    <Folder Include="Infrastructure\MapProfiles\CustomConverters\" />
     <Folder Include="Stages\" />
     <Folder Include="Places\" />
   </ItemGroup>

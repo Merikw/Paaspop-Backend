@@ -16,12 +16,12 @@ namespace PaaspopService.Domain.ValueObjects
             AbsolutePercentage = partOftotal / total * 100;
         }
 
-        public Percentage(int total)
+        public Percentage(int absolutePercentage)
         {
-            if (BetweenHandler.IsInBetween(total, 0, 100))
-                AbsolutePercentage = total;
+            if (BetweenHandler.IsInBetween(absolutePercentage, 0, 100))
+                AbsolutePercentage = absolutePercentage;
             else
-                throw new PercentageInvalidException(total);
+                throw new PercentageInvalidException(absolutePercentage);
         }
 
         public int AbsolutePercentage { get; }
