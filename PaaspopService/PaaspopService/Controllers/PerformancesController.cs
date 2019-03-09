@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PaaspopService.Application.Performances.Queries;
+using PaaspopService.Common.DictionaryAsArrayResolver;
 
 namespace PaaspopService.WebApi.Controllers
 {
@@ -10,7 +12,12 @@ namespace PaaspopService.WebApi.Controllers
     {
         public async Task<ActionResult<PerformanceViewModel>> Get()
         {
-            return Ok(await GetMediator().Send(new GetPerformancesQuery()));
+            var result = await GetMediator().Send(new GetPerformancesQuery());
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            settings.ContractResolver = new DictionaryAsArrayResolver();
+
+            var arrayDictResult = JsonConvert.SerializeObject(result, settings);
+            return Ok(arrayDictResult);
         }
     }
 }
