@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using MediatR;
 using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Domain.Entities;

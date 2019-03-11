@@ -51,13 +51,13 @@ namespace PaaspopService.WebApi
                 .AddMediatR();
 
             if (!BsonClassMap.IsClassMapRegistered(typeof(GeneralMapper)))
-            {
                 try
                 {
                     BsonClassMap.RegisterClassMap<GeneralMapper>();
                 }
-                catch (ArgumentException exception) { }
-            }
+                catch (ArgumentException exception)
+                {
+                }
 
             services.Configure<MongoDbSettings>(options =>
             {

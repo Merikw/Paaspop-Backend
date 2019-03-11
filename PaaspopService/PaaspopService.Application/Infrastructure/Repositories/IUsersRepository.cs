@@ -6,5 +6,6 @@ namespace PaaspopService.Application.Infrastructure.Repositories
     public interface IUsersRepository
     {
         Task CreateUserAsync(User user);
+        Task UpdateUserAsync(User user);
     }
 }

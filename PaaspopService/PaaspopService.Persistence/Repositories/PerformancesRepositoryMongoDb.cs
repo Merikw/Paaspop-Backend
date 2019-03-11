@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Domain.Entities;
@@ -17,6 +18,13 @@ namespace PaaspopService.Persistence.Repositories
         {
             var result = await DbContext.GetPerformances().FindAsync(_ => true);
             return await result.ToListAsync();
+        }
+
+        public async Task<Performance> GetPerformanceById(string id)
+        {
+            var filter = Builders<Performance>.Filter.Eq("_id", ObjectId.Parse(id));
+            var result = await DbContext.GetPerformances().FindAsync(filter);
+            return result.FirstOrDefault();
         }
     }
 }
