@@ -1,9 +1,14 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
 using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
+using PaaspopService.Application.Places.Commands.UpdatePlace;
+using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Domain.Entities;
+using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Application.Users.Commands.UpdateUser
 {
@@ -11,7 +16,7 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
     {
         private readonly IUsersRepository _usersRepository;
 
-        public UpdateUserHandler(IMapper mapper, IUsersRepository usersRepository) : base(mapper)
+        public UpdateUserHandler(IMapper mapper, IMediator mediator, IUsersRepository usersRepository) : base(mapper, mediator)
         {
             _usersRepository = usersRepository;
         }
@@ -20,7 +25,22 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
         {
             var userToBeUpdates = Mapper.Map<User>(request);
             await _usersRepository.UpdateUserAsync(userToBeUpdates);
+            await UpdatePlacesFromLocationOfUser(userToBeUpdates.CurrentLocation);
             return userToBeUpdates;
+        }
+
+        private async Task UpdatePlacesFromLocationOfUser(LocationCoordinate locationOfUser)
+        {
+            var places = await Mediator.Send(new GetPlacesQuery());
+            var userCount = await _usersRepository.GetUsersCountAsync();
+            foreach (var place in places)
+            {
+                if (place.GetDistanceFrom(locationOfUser).AbsoluteDistance >= 10) continue;
+                var peopleOnLocation = userCount * (place.CrowdPercentage.AbsolutePercentage / 100);
+                peopleOnLocation = peopleOnLocation + 1;
+                place.CrowdPercentage = new Percentage(Convert.ToInt32(peopleOnLocation), Convert.ToInt32(userCount));
+                await Mediator.Send(new UpdatePlaceCommand { PlaceToBeUpdated = place});
+            }
         }
     }
 }

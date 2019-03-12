@@ -12,7 +12,7 @@ namespace PaaspopService.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
-            var result = await GetMediator().Send(command);
+            var result = await Mediator.Send(command);
 
             return Ok(result);
         }
@@ -20,7 +20,7 @@ namespace PaaspopService.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateUserCommand command)
         {
-            var result = await GetMediator().Send(command);
+            var result = await Mediator.Send(command);
 
             return Ok(result);
         }

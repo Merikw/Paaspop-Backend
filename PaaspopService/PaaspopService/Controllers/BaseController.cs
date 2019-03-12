@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using PaaspopService.Common.DictionaryAsArrayResolver;
 
 namespace PaaspopService.WebApi.Controllers
 {
@@ -8,11 +10,16 @@ namespace PaaspopService.WebApi.Controllers
     [ApiController]
     public class BaseController : Controller
     {
-        private IMediator _mediator;
+        protected IMediator Mediator;
+        protected JsonSerializerSettings JsonDictionaryAsArrayResolver;
 
-        protected IMediator GetMediator()
+        public BaseController()
         {
-            return _mediator ?? (_mediator = HttpContext.RequestServices.GetService<IMediator>());
+            Mediator = Mediator ?? (Mediator = HttpContext.RequestServices.GetService<IMediator>());
+            JsonDictionaryAsArrayResolver = new JsonSerializerSettings
+            {
+                ContractResolver = new DictionaryAsArrayResolver()
+            };
         }
     }
 }

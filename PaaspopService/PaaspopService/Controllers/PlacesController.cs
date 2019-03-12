@@ -2,17 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PaaspopService.Application.Performances.Queries;
+using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
 
 namespace PaaspopService.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PerformancesController : BaseController
+    public class PlacesController : BaseController
     {
-        [HttpGet]
-        public async Task<ActionResult<PerformanceViewModel>> Get()
+        [HttpGet("/best")]
+        public async Task<ActionResult<PerformanceViewModel>> GetBest()
         {
-            var result = await Mediator.Send(new GetPerformancesQuery());
+            var result = await Mediator.Send(new GetBestPlacesQuery());
             var arrayDictResult = JsonConvert.SerializeObject(result, JsonDictionaryAsArrayResolver);
             return Ok(arrayDictResult);
         }
