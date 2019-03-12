@@ -36,9 +36,7 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
             foreach (var place in places)
             {
                 if (place.GetDistanceFrom(locationOfUser).AbsoluteDistance >= 10) continue;
-                var peopleOnLocation = userCount * (place.CrowdPercentage.AbsolutePercentage / 100);
-                peopleOnLocation = peopleOnLocation + 1;
-                place.CrowdPercentage = new Percentage(Convert.ToInt32(peopleOnLocation), Convert.ToInt32(userCount));
+                place.CrowdPercentage = place.CalculateCrowdPercentage(Convert.ToInt32(userCount), 1);
                 await Mediator.Send(new UpdatePlaceCommand { PlaceToBeUpdated = place});
             }
         }
