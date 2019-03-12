@@ -7,5 +7,6 @@ namespace PaaspopService.Application.Infrastructure.Repositories
     public interface IPerformancesRepository
     {
         Task<List<Performance>> GetPerformances();
+        Task<Performance> GetPerformanceById(string id);
     }
 }

@@ -14,6 +14,9 @@
     <Reference Include="Microsoft.Extensions.Logging.Abstractions">
       <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\..\..\..\.nuget\packages\mongodb.bson\2.7.3\lib\netstandard1.5\MongoDB.Bson.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
