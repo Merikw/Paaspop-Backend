@@ -11,7 +11,7 @@ namespace PaaspopService.WebApi.Controllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<ActionResult<ArtistViewModel>> Get(string id)
         {
-            return Ok(await Mediator.Send(new GetArtistQuery {Id = id}));
+            return Ok(await GetMediator().Send(new GetArtistQuery {Id = id}));
         }
     }
 }

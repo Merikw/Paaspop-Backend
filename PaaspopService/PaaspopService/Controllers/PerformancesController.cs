@@ -12,7 +12,7 @@ namespace PaaspopService.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<PerformanceViewModel>> Get()
         {
-            var result = await Mediator.Send(new GetPerformancesQuery());
+            var result = await GetMediator().Send(new GetPerformancesQuery());
             var arrayDictResult = JsonConvert.SerializeObject(result, JsonDictionaryAsArrayResolver);
             return Ok(arrayDictResult);
         }

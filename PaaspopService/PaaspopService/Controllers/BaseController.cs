@@ -15,11 +15,15 @@ namespace PaaspopService.WebApi.Controllers
 
         public BaseController()
         {
-            Mediator = Mediator ?? (Mediator = HttpContext.RequestServices.GetService<IMediator>());
             JsonDictionaryAsArrayResolver = new JsonSerializerSettings
             {
                 ContractResolver = new DictionaryAsArrayResolver()
             };
+        }
+
+        protected IMediator GetMediator()
+        {
+            return Mediator ?? (Mediator = HttpContext.RequestServices.GetService<IMediator>());
         }
     }
 }

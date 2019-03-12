@@ -10,10 +10,10 @@ namespace PaaspopService.WebApi.Controllers
     [ApiController]
     public class PlacesController : BaseController
     {
-        [HttpGet("/best")]
+        [HttpGet("best")]
         public async Task<ActionResult<PerformanceViewModel>> GetBest()
         {
-            var result = await Mediator.Send(new GetBestPlacesQuery());
+            var result = await GetMediator().Send(new GetBestPlacesQuery());
             var arrayDictResult = JsonConvert.SerializeObject(result, JsonDictionaryAsArrayResolver);
             return Ok(arrayDictResult);
         }

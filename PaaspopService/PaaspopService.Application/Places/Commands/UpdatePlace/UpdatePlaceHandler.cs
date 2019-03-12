@@ -21,7 +21,7 @@ namespace PaaspopService.Application.Places.Commands.UpdatePlace
 
         public override async Task<Place> Handle(UpdatePlaceCommand request, CancellationToken cancellationToken)
         {
-            var placeToBeUpdated = Mapper.Map<Place>(request);
+            var placeToBeUpdated = request.PlaceToBeUpdated;
             await _placesRepository.UpdatePlaceAsync(placeToBeUpdated);
             return placeToBeUpdated;
         }

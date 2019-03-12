@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
-using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.ValueObjects;
@@ -21,10 +20,6 @@ namespace PaaspopService.Application.Infrastructure.MapProfiles
             CreateMap<Dictionary<string, List<BestPlace>>, BestPlacesViewModel>()
                 .ForMember(dest => dest.BestPlaces,
                     opt => opt.MapFrom(src => src));
-
-            CreateMap<UpdatePlaceCommand, Place>()
-                .ForMember(dest => dest,
-                    opt => opt.MapFrom(src => src.PlaceToBeUpdated));
         }
     }
 }
