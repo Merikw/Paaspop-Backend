@@ -12,7 +12,7 @@ COPY ["./PaaspopService/PaaspopService.Persistence/PaaspopService.Persistence.cs
 COPY ["./PaaspopService/PaaspopService.Application/PaaspopService.Application.csproj", "PaaspopService.Application/"]
 RUN dotnet restore "./PaaspopService/PaaspopService.WebApi.csproj"
 COPY . .
-WORKDIR "/src/PaaspopService"
+WORKDIR "/src/PaaspopService/PaaspopService"
 RUN dotnet build "PaaspopService.WebApi.csproj" -c Release -o /app
 
 FROM build AS publish
