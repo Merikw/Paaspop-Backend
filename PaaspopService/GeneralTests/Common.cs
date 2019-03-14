@@ -1,4 +1,6 @@
+using System;
 using FluentAssertions;
+using PaaspopService.Common.DistanceBetweenCoordinates;
 using PaaspopService.Common.Handlers;
 using Xunit;
 
@@ -24,6 +26,14 @@ namespace GeneralTests
             resultFalseNegative.Should().Be(false);
             resultFalseMinBoundary.Should().Be(false);
             resultFalseMaxBoundary.Should().Be(false);
+        }
+
+        [Fact]
+        public void GetDistance()
+        {
+            var result = Convert.ToInt32(DistanceBetweenCoordinates.GetDistanceInMeters(51.441642, 5.4697225, 51.5077637, 5.3978482));
+
+            result.Should().Be(8879);
         }
     }
 }

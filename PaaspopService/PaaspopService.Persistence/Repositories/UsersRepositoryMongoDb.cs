@@ -29,5 +29,10 @@ namespace PaaspopService.Persistence.Repositories
                 .Set("FavoritePerformances", user.FavoritePerformances);
             await DbContext.GetUsers().FindOneAndUpdateAsync<User>(filter, update);
         }
+
+        public async Task<long> GetUsersCountAsync()
+        {
+            return await DbContext.GetUsers().CountDocumentsAsync(new BsonDocument());
+        }
     }
 }

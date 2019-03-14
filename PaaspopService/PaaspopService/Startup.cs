@@ -48,6 +48,7 @@ namespace PaaspopService.WebApi
                 .AddTransient<IArtistsRepository, ArtistsRepositoryMongoDb>()
                 .AddTransient<IUsersRepository, UsersRepositoryMongoDb>()
                 .AddTransient<IPerformancesRepository, PerformancesRepositoryMongoDb>()
+                .AddTransient<IPlacesRepository, PlacesRepositoryMongoDb>()
                 .AddMediatR();
 
             if (!BsonClassMap.IsClassMapRegistered(typeof(GeneralMapper)))

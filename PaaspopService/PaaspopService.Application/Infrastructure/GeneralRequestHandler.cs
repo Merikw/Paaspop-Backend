@@ -9,9 +9,11 @@ namespace PaaspopService.Application.Infrastructure
         where TQuery : IRequest<TModel>
     {
         protected readonly IMapper Mapper;
+        protected IMediator Mediator;
 
-        protected GeneralRequestHandler(IMapper mapper)
+        protected GeneralRequestHandler(IMapper mapper, IMediator mediator = null)
         {
+            Mediator = mediator;
             Mapper = mapper;
         }
 
