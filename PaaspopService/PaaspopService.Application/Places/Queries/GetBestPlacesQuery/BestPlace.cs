@@ -8,6 +8,7 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
     {
         public Place Place { get; set; }
         public Distance Distance { get; set; }
+        public Percentage CrowdPercentage { get; set; }
 
         public int CompareTo(BestPlace other)
         {

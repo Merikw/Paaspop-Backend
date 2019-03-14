@@ -19,7 +19,10 @@ namespace PaaspopService.Application.Infrastructure.MapProfiles
 
             CreateMap<Dictionary<string, List<BestPlace>>, BestPlacesViewModel>()
                 .ForMember(dest => dest.BestPlaces,
-                    opt => opt.MapFrom(src => src));
+                    opt => opt.MapFrom(src => src))
+                .ForMember(dest => dest.MaxPercentage,
+                    opt => opt.MapFrom((source, dest, destMember, context) =>
+                        context.Items["maxpercentage"]));
         }
     }
 }

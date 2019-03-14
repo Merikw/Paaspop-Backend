@@ -19,9 +19,14 @@ namespace PaaspopService.Common.Middleware
             {
                 await _next(context);
             }
+            catch (CustomException ex)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(new ExceptionObject {Message = ex.Message}.ToString());
+            }
             catch (Exception ex)
             {
-                await context.Response.WriteAsync(new ExceptionObject {Message = ex.Message}.ToString());
+                await context.Response.WriteAsync(new ExceptionObject { Message = ex.Message }.ToString());
             }
         }
     }

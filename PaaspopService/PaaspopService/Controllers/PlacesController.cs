@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PaaspopService.Application.Performances.Queries;
 using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
+using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.WebApi.Controllers
 {
@@ -10,10 +11,13 @@ namespace PaaspopService.WebApi.Controllers
     [ApiController]
     public class PlacesController : BaseController
     {
-        [HttpGet("best")]
-        public async Task<ActionResult<PerformanceViewModel>> GetBest()
+        [HttpGet("best/{lat}/{lon}")]
+        public async Task<ActionResult<PerformanceViewModel>> GetBest(double lat, double lon)
         {
-            var result = await GetMediator().Send(new GetBestPlacesQuery());
+            var result = await GetMediator().Send(new GetBestPlacesQuery
+            {
+                UserLocationCoordinate = new LocationCoordinate(lat, lon)
+            });
             var arrayDictResult = JsonConvert.SerializeObject(result, JsonDictionaryAsArrayResolver);
             return Ok(arrayDictResult);
         }
