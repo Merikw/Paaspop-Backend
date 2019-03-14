@@ -20,6 +20,7 @@ namespace PaaspopService.WebApi.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateUserCommand command)
         {
+
             var result = await GetMediator().Send(command);
 
             return Ok(result);

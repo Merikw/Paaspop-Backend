@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using PaaspopService.Common.DistanceBetweenCoordinates;
 using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
@@ -11,6 +12,7 @@ namespace PaaspopService.Domain.Entities
         public PlaceType Type { get; set; }
         public Percentage CrowdPercentage { get; set; }
         public LocationCoordinate Location { get; set; }
+        public ISet<string> UsersOnPlace { get; set; } = new HashSet<string>();
 
         public Distance GetDistanceFrom(LocationCoordinate from)
         {

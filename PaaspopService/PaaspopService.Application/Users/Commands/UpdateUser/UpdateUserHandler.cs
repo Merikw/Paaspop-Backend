@@ -25,17 +25,23 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
         {
             var userToBeUpdates = Mapper.Map<User>(request);
             await _usersRepository.UpdateUserAsync(userToBeUpdates);
-            await UpdatePlacesFromLocationOfUser(userToBeUpdates.CurrentLocation);
+            await UpdatePlacesFromLocationOfUser(userToBeUpdates);
             return userToBeUpdates;
         }
 
-        private async Task UpdatePlacesFromLocationOfUser(LocationCoordinate locationOfUser)
+        private async Task UpdatePlacesFromLocationOfUser(User user)
         {
             var places = await Mediator.Send(new GetPlacesQuery());
             var userCount = await _usersRepository.GetUsersCountAsync();
             foreach (var place in places)
             {
-                if (place.GetDistanceFrom(locationOfUser).AbsoluteDistance >= 10) continue;
+                if (place.GetDistanceFrom(user.CurrentLocation).AbsoluteDistance >= 10 || place.UsersOnPlace.Contains(user.Id))
+                {
+                    place.UsersOnPlace.Remove(user.Id);
+                    continue;
+                }
+
+                place.UsersOnPlace.Add(user.Id);
                 place.CrowdPercentage = place.CalculateCrowdPercentage(Convert.ToInt32(userCount), 1);
                 await Mediator.Send(new UpdatePlaceCommand { PlaceToBeUpdated = place});
             }

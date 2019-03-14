@@ -20,7 +20,7 @@ namespace PaaspopService.Domain.ValueObjects
 
         public Distance(double distance)
         {
-            CheckDistance(Convert.ToInt32(distance));
+            CheckDistance(Convert.ToInt32(Math.Ceiling(distance)));
         }
 
         protected override IEnumerable<object> GetAtomicValues()

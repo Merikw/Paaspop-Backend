@@ -27,7 +27,8 @@ namespace PaaspopService.Persistence.Repositories
             var update = Builders<Place>.Update.Set("Name", place.Name)
                 .Set("Type", place.Type)
                 .Set("CrowdPercentage", place.CrowdPercentage)
-                .Set("Location", place.Location);
+                .Set("Location", place.Location)
+                .Set("UsersOnPlace", place.UsersOnPlace);
             await DbContext.GetPlaces().FindOneAndUpdateAsync<Place>(filter, update);
         }
     }
