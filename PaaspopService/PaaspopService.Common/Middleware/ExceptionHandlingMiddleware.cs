@@ -22,11 +22,11 @@ namespace PaaspopService.Common.Middleware
             catch (CustomException ex)
             {
                 context.Response.StatusCode = 400;
-                await context.Response.WriteAsync(new ExceptionObject {Message = ex.Message}.ToString());
+                await context.Response.WriteAsync(new ExceptionObject {Message = ex.Message, InnerExceptionMessage = ex.InnerException.Message}.ToString());
             }
             catch (Exception ex)
             {
-                await context.Response.WriteAsync(new ExceptionObject { Message = ex.Message }.ToString());
+                await context.Response.WriteAsync(new ExceptionObject { Message = ex.Message, InnerExceptionMessage = ex.InnerException.Message }.ToString());
             }
         }
     }

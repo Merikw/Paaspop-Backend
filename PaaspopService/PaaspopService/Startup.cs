@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -12,7 +13,14 @@ using MongoDB.Bson.Serialization;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
 using PaaspopService.Application.Infrastructure.Validators;
+using PaaspopService.Application.Performances.Queries;
+using PaaspopService.Application.Places.Commands.UpdatePlace;
+using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
+using PaaspopService.Application.Places.Queries.GetPlacesQuery;
+using PaaspopService.Application.Users.Commands.CreateUser;
+using PaaspopService.Application.Users.Commands.UpdateUser;
 using PaaspopService.Common.Middleware;
+using PaaspopService.Domain.Entities;
 using PaaspopService.Persistence.Contexts;
 using PaaspopService.Persistence.Mappers;
 using PaaspopService.Persistence.Repositories;
@@ -40,16 +48,22 @@ namespace PaaspopService.WebApi
                     validator.RegisterValidatorsFromAssemblyContaining<GetArtistValidator>());
 
             services.AddAutoMapper();
+            services.AddMediatR(typeof(Startup));
 
             services
                 .AddSingleton<IDbContext, MongoDbContext>()
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
+                .AddScoped<IRequestHandler<GetPerformancesQuery, PerformanceViewModel>, GetPerformancesQueryHandler>()
+                .AddScoped<IRequestHandler<CreateUserCommand, User>, CreateUserHandler>()
+                .AddScoped<IRequestHandler<UpdateUserCommand, User>, UpdateUserHandler>()
+                .AddScoped<IRequestHandler<UpdatePlaceCommand, Place>, UpdatePlaceHandler>()
+                .AddScoped<IRequestHandler<GetBestPlacesQuery, BestPlacesViewModel>, GetBestPlacesHandler>()
+                .AddScoped<IRequestHandler<GetPlacesQuery, List<Place>>, GetPlacesHandler>()
                 .AddTransient<IArtistsRepository, ArtistsRepositoryMongoDb>()
                 .AddTransient<IUsersRepository, UsersRepositoryMongoDb>()
                 .AddTransient<IPerformancesRepository, PerformancesRepositoryMongoDb>()
-                .AddTransient<IPlacesRepository, PlacesRepositoryMongoDb>()
-                .AddMediatR();
+                .AddTransient<IPlacesRepository, PlacesRepositoryMongoDb>();
 
             if (!BsonClassMap.IsClassMapRegistered(typeof(GeneralMapper)))
                 try
