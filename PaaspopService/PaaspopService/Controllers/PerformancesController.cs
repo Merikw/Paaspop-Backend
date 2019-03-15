@@ -16,5 +16,11 @@ namespace PaaspopService.WebApi.Controllers
             var arrayDictResult = JsonConvert.SerializeObject(result, JsonDictionaryAsArrayResolver);
             return Ok(arrayDictResult);
         }
+
+        [HttpGet("test")]
+        public async Task<ActionResult> GetTest()
+        {
+            return Ok("Test");
+        }
     }
 }
