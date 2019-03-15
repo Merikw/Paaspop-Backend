@@ -8,8 +8,7 @@ namespace ControllerTests
 {
     public class GeneralControllerTest
     {
-        private static GeneralControllerTest instance = null;
-        public HttpClient Client { get; }
+        private static GeneralControllerTest instance;
 
         private GeneralControllerTest()
         {
@@ -20,14 +19,13 @@ namespace ControllerTests
                 new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        public HttpClient Client { get; }
+
         public static GeneralControllerTest Instance
         {
             get
             {
-                if (instance == null)
-                {
-                    instance = new GeneralControllerTest();
-                }
+                if (instance == null) instance = new GeneralControllerTest();
                 return instance;
             }
         }

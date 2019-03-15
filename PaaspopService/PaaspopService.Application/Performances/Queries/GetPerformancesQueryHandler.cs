@@ -16,10 +16,13 @@ namespace PaaspopService.Application.Performances.Queries
             _performancesRepository = performanceRepository;
         }
 
-        public override async Task<PerformanceViewModel> Handle(GetPerformancesQuery request, CancellationToken cancellationToken)
+        public override async Task<PerformanceViewModel> Handle(GetPerformancesQuery request,
+            CancellationToken cancellationToken)
         {
             var result = await _performancesRepository.GetPerformances();
-            return Mapper.Map<PerformanceViewModel>(result);
+            var mappedResult = Mapper.Map<PerformanceViewModel>(result);
+            foreach (var entry in mappedResult.Performances) entry.Value.Sort();
+            return mappedResult;
         }
     }
 }

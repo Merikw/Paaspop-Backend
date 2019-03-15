@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PaaspopService.Common.Handlers;
 using PaaspopService.Domain.Exceptions;
 using PaaspopService.Domain.Infrastructure;
@@ -11,9 +12,17 @@ namespace PaaspopService.Domain.ValueObjects
         {
         }
 
-        public Percentage(int partOftotal, int total)
+        public Percentage(double partOfTotal, double total)
         {
-            AbsolutePercentage = partOftotal / total * 100;
+            var percentage = partOfTotal / total * 100;
+            if (partOfTotal <= total && Math.Abs(partOfTotal) > 0 && Math.Abs(total) > 0)
+            {
+                AbsolutePercentage = (int)percentage;
+            } 
+            else
+            {
+                throw new PercentageInvalidException((int)percentage);
+            }
         }
 
         public Percentage(int absolutePercentage)
@@ -24,7 +33,7 @@ namespace PaaspopService.Domain.ValueObjects
                 throw new PercentageInvalidException(absolutePercentage);
         }
 
-        public int AbsolutePercentage { get; }
+        public int AbsolutePercentage;
 
         public static implicit operator string(Percentage percentage)
         {

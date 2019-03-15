@@ -1,4 +1,7 @@
-﻿using PaaspopService.Domain.Enumerations;
+﻿using System;
+using System.Collections.Generic;
+using PaaspopService.Common.DistanceBetweenCoordinates;
+using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Domain.Entities
@@ -9,5 +12,20 @@ namespace PaaspopService.Domain.Entities
         public PlaceType Type { get; set; }
         public Percentage CrowdPercentage { get; set; }
         public LocationCoordinate Location { get; set; }
+        public ISet<string> UsersOnPlace { get; set; } = new HashSet<string>();
+
+        public Distance GetDistanceFrom(LocationCoordinate from)
+        {
+            var distance = DistanceBetweenCoordinates.GetDistanceInMeters(from.Latitude, from.Longitude, Location.Latitude,
+                Location.Longitude);
+            return new Distance(distance);
+        }
+
+        public Percentage CalculateCrowdPercentage(int userCount, int addAmountOfUsers)
+        {
+            var peopleOnLocation = (double) userCount * CrowdPercentage.AbsolutePercentage / 100;
+            peopleOnLocation = peopleOnLocation + addAmountOfUsers;
+            return new Percentage(peopleOnLocation, (double) userCount);
+        }
     }
 }
