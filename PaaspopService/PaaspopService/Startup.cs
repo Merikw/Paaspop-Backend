@@ -14,6 +14,8 @@ using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
 using PaaspopService.Application.Infrastructure.Validators;
 using PaaspopService.Application.Performances.Queries;
+using PaaspopService.Application.Performances.Queries.GetFavoritePerformancesFromUser;
+using PaaspopService.Application.Performances.Queries.GetPerformances;
 using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
@@ -55,6 +57,7 @@ namespace PaaspopService.WebApi
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped<IRequestHandler<GetPerformancesQuery, PerformanceViewModel>, GetPerformancesQueryHandler>()
+                .AddScoped<IRequestHandler<GetFavoritePerformancesFromUserQuery, List<Performance>>, GetFavoritePerformancesFromUserHandler>()
                 .AddScoped<IRequestHandler<CreateUserCommand, User>, CreateUserHandler>()
                 .AddScoped<IRequestHandler<UpdateUserCommand, User>, UpdateUserHandler>()
                 .AddScoped<IRequestHandler<UpdatePlaceCommand, Place>, UpdatePlaceHandler>()

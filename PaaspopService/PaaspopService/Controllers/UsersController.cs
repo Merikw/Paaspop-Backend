@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PaaspopService.Application.Performances.Queries.GetFavoritePerformancesFromUser;
 using PaaspopService.Application.Users.Commands.CreateUser;
 using PaaspopService.Application.Users.Commands.UpdateUser;
+using PaaspopService.Domain.Entities;
 
 namespace PaaspopService.WebApi.Controllers
 {
@@ -9,6 +12,14 @@ namespace PaaspopService.WebApi.Controllers
     [ApiController]
     public class UsersController : BaseController
     {
+        [HttpGet("favoritePerformances/{userId}")]
+        public async Task<ActionResult<List<Performance>>> GetBest(string userId)
+        {
+            var result = await GetMediator().Send(new GetFavoritePerformancesFromUserQuery {UserId = userId});
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {

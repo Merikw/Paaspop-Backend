@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PaaspopService.Application.Performances.Queries;
+using PaaspopService.Application.Performances.Queries.GetPerformances;
 using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
 using PaaspopService.Domain.ValueObjects;
 

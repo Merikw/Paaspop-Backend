@@ -18,7 +18,7 @@ namespace PaaspopService.Domain.Entities
                 string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 1) return 1;
             if (PerformanceTime.Day == other.PerformanceTime.Day &&
                 string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 0) return 0;
-            return PerformanceTime.Day < other.PerformanceTime.Day ? -1 : 0;
+            return PerformanceTime.Day < other.PerformanceTime.Day ? -1 : 1;
         }
     }
 }

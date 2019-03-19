@@ -34,5 +34,12 @@ namespace PaaspopService.Persistence.Repositories
         {
             return await DbContext.GetUsers().CountDocumentsAsync(new BsonDocument());
         }
+
+        public async Task<User> GetUserByIdAsync(string id)
+        {
+            var filter = Builders<User>.Filter.Eq("_id", ObjectId.Parse(id));
+            var result = await DbContext.GetUsers().FindAsync(filter);
+            return result.FirstOrDefault();
+        }
     }
 }

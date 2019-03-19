@@ -17,7 +17,7 @@ namespace PaaspopService.WebApi.Controllers
         {
             JsonDictionaryAsArrayResolver = new JsonSerializerSettings
             {
-                ContractResolver = new DictionaryAsArrayResolver()
+                ContractResolver = new DictionaryAsArrayResolver(),
             };
         }
 
