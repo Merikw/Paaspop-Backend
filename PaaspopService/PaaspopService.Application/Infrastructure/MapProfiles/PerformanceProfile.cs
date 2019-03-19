@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using PaaspopService.Application.Performances.Queries;
+using PaaspopService.Application.Performances.Queries.GetPerformances;
 using PaaspopService.Domain.Entities;
 
 namespace PaaspopService.Application.Infrastructure.MapProfiles

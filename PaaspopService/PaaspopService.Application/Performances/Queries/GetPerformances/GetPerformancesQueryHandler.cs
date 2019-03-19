@@ -4,7 +4,7 @@ using AutoMapper;
 using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
 
-namespace PaaspopService.Application.Performances.Queries
+namespace PaaspopService.Application.Performances.Queries.GetPerformances
 {
     public class GetPerformancesQueryHandler : GeneralRequestHandler<GetPerformancesQuery, PerformanceViewModel>
     {

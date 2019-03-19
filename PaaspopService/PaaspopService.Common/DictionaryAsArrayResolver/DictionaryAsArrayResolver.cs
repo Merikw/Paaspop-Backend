@@ -6,7 +6,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace PaaspopService.Common.DictionaryAsArrayResolver
 {
-    public class DictionaryAsArrayResolver : DefaultContractResolver
+    public class DictionaryAsArrayResolver : CamelCasePropertyNamesContractResolver
     {
         protected override JsonContract CreateContract(Type objectType)
         {
