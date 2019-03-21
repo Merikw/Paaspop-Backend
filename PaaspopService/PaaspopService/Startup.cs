@@ -13,6 +13,7 @@ using MongoDB.Bson.Serialization;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
 using PaaspopService.Application.Infrastructure.Validators;
+using PaaspopService.Application.Performances.Commands.UpdatePerformance;
 using PaaspopService.Application.Performances.Queries;
 using PaaspopService.Application.Performances.Queries.GetFavoritePerformancesFromUser;
 using PaaspopService.Application.Performances.Queries.GetPerformances;
@@ -58,6 +59,7 @@ namespace PaaspopService.WebApi
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>))
                 .AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>))
                 .AddScoped<IRequestHandler<GetPerformancesQuery, PerformanceViewModel>, GetPerformancesQueryHandler>()
+                .AddScoped<IRequestHandler<UpdatePerformanceCommand, Performance>, UpdatePerformanceHandler>()
                 .AddScoped<IRequestHandler<GetFavoritePerformancesFromUserQuery, List<Performance>>, GetFavoritePerformancesFromUserHandler>()
                 .AddScoped<IRequestHandler<CreateUserCommand, User>, CreateUserHandler>()
                 .AddScoped<IRequestHandler<UpdateUserCommand, User>, UpdateUserHandler>()

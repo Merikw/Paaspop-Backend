@@ -33,7 +33,8 @@ namespace PaaspopService.Domain.Entities
             {
                 interestPercentage = interestPercentage - amountOfUsers;
             }
-            return new Percentage(interestPercentage, (double)userCount);
+
+            return interestPercentage >= 0 ? new Percentage(interestPercentage, (double) userCount) : InterestPercentage;
         } 
     }
 }
