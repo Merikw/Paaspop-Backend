@@ -9,5 +9,6 @@ namespace PaaspopService.Application.Infrastructure.Repositories
         Task UpdateUserAsync(User user);
         Task<long> GetUsersCountAsync();
         Task<User> GetUserByIdAsync(string id);
+        Task RemoveUserAsync(string id);
     }
 }
