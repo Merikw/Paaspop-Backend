@@ -21,10 +21,17 @@ namespace PaaspopService.Domain.Entities
             return new Distance(distance);
         }
 
-        public Percentage CalculateCrowdPercentage(int userCount, int addAmountOfUsers)
+        public Percentage CalculateCrowdPercentage(int userCount, int amountOfUsers, Operator opperator)
         {
             var peopleOnLocation = (double) userCount * CrowdPercentage.AbsolutePercentage / 100;
-            peopleOnLocation = peopleOnLocation + addAmountOfUsers;
+            if (opperator == Operator.Plus)
+            {
+                peopleOnLocation = peopleOnLocation + amountOfUsers;
+            }
+            else
+            {
+                peopleOnLocation = peopleOnLocation - amountOfUsers;
+            }
             return new Percentage(peopleOnLocation, (double) userCount);
         }
     }

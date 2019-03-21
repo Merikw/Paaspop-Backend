@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using MongoDB.Bson;
 using PaaspopService.Domain.Entities;
@@ -12,34 +11,26 @@ namespace ClassTests
     public class PlaceTests
     {
         [Fact]
-        public void CalculateCrowdPercentage_correct()
+        public void CalculateCrowdPercentage_correct_plus()
         {
             var place = new Place
             {
-                Name = "Wc naast Apollo",
-                CrowdPercentage = new Percentage(12, 100),
-                Id = ObjectId.GenerateNewId().ToString(),
-                Location = new LocationCoordinate(5.5, 51.5),
-                Type = PlaceType.Toilet
+                CrowdPercentage = new Percentage(12, 100)
             };
 
-            var result = place.CalculateCrowdPercentage(100, 1);
+            var result = place.CalculateCrowdPercentage(100, 1, Operator.Plus);
             result.AbsolutePercentage.Should().Be(13);
         }
 
         [Fact]
-        public void CalculateCrowdPercentage_wrong_exception()
+        public void CalculateCrowdPercentage_wrong_exception_plus()
         {
             var place = new Place
             {
-                Name = "Wc naast Apollo",
-                CrowdPercentage = new Percentage(12, 100),
-                Id = ObjectId.GenerateNewId().ToString(),
-                Location = new LocationCoordinate(5.5, 51.5),
-                Type = PlaceType.Toilet
+                CrowdPercentage = new Percentage(12, 100)
             };
 
-            Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(1, 1));
+            Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(1, 1, Operator.Plus));
         }
 
         [Fact]
@@ -47,14 +38,32 @@ namespace ClassTests
         {
             var place = new Place
             {
-                Name = "Wc naast Apollo",
-                CrowdPercentage = new Percentage(12, 100),
-                Id = ObjectId.GenerateNewId().ToString(),
-                Location = new LocationCoordinate(5.5, 51.5),
-                Type = PlaceType.Toilet
+                CrowdPercentage = new Percentage(12, 100)
             };
 
-            Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(0, 1));
+            Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(0, 1, Operator.Plus));
+        }
+        [Fact]
+        public void CalculateCrowdPercentage_correct_minus()
+        {
+            var place = new Place
+            {
+                CrowdPercentage = new Percentage(12, 100)
+            };
+
+            var result = place.CalculateCrowdPercentage(100, 1, Operator.Minus);
+            result.AbsolutePercentage.Should().Be(11);
+        }
+
+        [Fact]
+        public void CalculateCrowdPercentage_wrong_exception_minus()
+        {
+            var place = new Place
+            {
+                CrowdPercentage = new Percentage(12, 100)
+            };
+
+            Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(1, 1, Operator.Minus));
         }
     }
 }

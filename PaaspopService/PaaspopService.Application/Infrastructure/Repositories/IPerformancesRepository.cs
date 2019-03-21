@@ -8,5 +8,6 @@ namespace PaaspopService.Application.Infrastructure.Repositories
     {
         Task<List<Performance>> GetPerformances();
         Task<Performance> GetPerformanceById(string id);
+        Task<Performance> UpdatePerformance(Performance performance);
     }
 }

@@ -20,6 +20,7 @@ using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Application.Users.Commands.CreateUser;
+using PaaspopService.Application.Users.Commands.RemoveUser;
 using PaaspopService.Application.Users.Commands.UpdateUser;
 using PaaspopService.Common.Middleware;
 using PaaspopService.Domain.Entities;
@@ -60,6 +61,7 @@ namespace PaaspopService.WebApi
                 .AddScoped<IRequestHandler<GetFavoritePerformancesFromUserQuery, List<Performance>>, GetFavoritePerformancesFromUserHandler>()
                 .AddScoped<IRequestHandler<CreateUserCommand, User>, CreateUserHandler>()
                 .AddScoped<IRequestHandler<UpdateUserCommand, User>, UpdateUserHandler>()
+                .AddScoped<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserHandler>()
                 .AddScoped<IRequestHandler<UpdatePlaceCommand, Place>, UpdatePlaceHandler>()
                 .AddScoped<IRequestHandler<GetBestPlacesQuery, BestPlacesViewModel>, GetBestPlacesHandler>()
                 .AddScoped<IRequestHandler<GetPlacesQuery, List<Place>>, GetPlacesHandler>()

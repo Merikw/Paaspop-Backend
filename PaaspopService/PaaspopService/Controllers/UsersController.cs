@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PaaspopService.Application.Performances.Queries.GetFavoritePerformancesFromUser;
 using PaaspopService.Application.Users.Commands.CreateUser;
+using PaaspopService.Application.Users.Commands.RemoveUser;
 using PaaspopService.Application.Users.Commands.UpdateUser;
 using PaaspopService.Domain.Entities;
 
@@ -33,6 +34,15 @@ namespace PaaspopService.WebApi.Controllers
         {
 
             var result = await GetMediator().Send(command);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> Update(string userId)
+        {
+
+            var result = await GetMediator().Send(new RemoveUserCommand() { UserId = userId });
 
             return Ok(result);
         }

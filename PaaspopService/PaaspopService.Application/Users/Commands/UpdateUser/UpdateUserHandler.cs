@@ -8,6 +8,7 @@ using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Domain.Entities;
+using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Application.Users.Commands.UpdateUser
@@ -42,7 +43,7 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
                 }
 
                 place.UsersOnPlace.Add(user.Id);
-                place.CrowdPercentage = place.CalculateCrowdPercentage(Convert.ToInt32(userCount), 1);
+                place.CrowdPercentage = place.CalculateCrowdPercentage(Convert.ToInt32(userCount), 1, Operator.Plus);
                 await Mediator.Send(new UpdatePlaceCommand { PlaceToBeUpdated = place});
             }
         }

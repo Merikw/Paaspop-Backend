@@ -15,7 +15,7 @@ namespace PaaspopService.Domain.ValueObjects
         public Percentage(double partOfTotal, double total)
         {
             var percentage = partOfTotal / total * 100;
-            if (partOfTotal <= total && Math.Abs(partOfTotal) > 0 && Math.Abs(total) > 0)
+            if (partOfTotal <= total && partOfTotal > 0 && total > 0)
             {
                 AbsolutePercentage = (int)percentage;
             } 

@@ -1,4 +1,5 @@
 ﻿using System;
+using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Domain.Entities
@@ -20,5 +21,19 @@ namespace PaaspopService.Domain.Entities
                 string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 0) return 0;
             return PerformanceTime.Day < other.PerformanceTime.Day ? -1 : 1;
         }
+            
+        public Percentage CalculateInterestPercentage(int userCount, int amountOfUsers, Operator opperator) 
+        {
+            var interestPercentage = (double)userCount * InterestPercentage.AbsolutePercentage / 100;
+            if (opperator == Operator.Plus)
+            {
+                interestPercentage = interestPercentage + amountOfUsers;
+            }
+            else
+            {
+                interestPercentage = interestPercentage - amountOfUsers;
+            }
+            return new Percentage(interestPercentage, (double)userCount);
+        } 
     }
 }

@@ -26,5 +26,16 @@ namespace PaaspopService.Persistence.Repositories
             var result = await DbContext.GetPerformances().FindAsync(filter);
             return result.FirstOrDefault();
         }
+
+        public async Task<Performance> UpdatePerformance(Performance performance)
+        {
+            var filter = Builders<Performance>.Filter.Eq("_id", ObjectId.Parse(performance.Id));
+            var update = Builders<Performance>.Update.Set("PerformanceTime", performance.PerformanceTime)
+                .Set("InterestPercentage", performance.InterestPercentage)
+                .Set("Stage", performance.Stage)
+                .Set("Artist", performance.Artist);
+            await DbContext.GetPerformances().FindOneAndUpdateAsync<Performance>(filter, update);
+            return performance;
+        }
     }
 }

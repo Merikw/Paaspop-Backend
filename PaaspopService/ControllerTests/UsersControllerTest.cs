@@ -7,6 +7,7 @@ using FluentAssertions;
 using MongoDB.Bson;
 using Newtonsoft.Json;
 using PaaspopService.Application.Users.Commands.CreateUser;
+using PaaspopService.Application.Users.Commands.RemoveUser;
 using PaaspopService.Application.Users.Commands.UpdateUser;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.Exceptions;
@@ -29,6 +30,11 @@ namespace ControllerTests
             updateUserCommand.Id = ObjectId.GenerateNewId().ToString();
             var stringContent = new StringContent(JsonConvert.SerializeObject(updateUserCommand), Encoding.UTF8, "application/json");
             return await GeneralControllerTest.Instance.Client.PutAsync("/api/users", stringContent);
+        }
+
+        public async Task<HttpResponseMessage> DeleteUser(string id)
+        {
+            return await GeneralControllerTest.Instance.Client.DeleteAsync("/api/users/" + id);
         }
 
         [Fact]
@@ -132,6 +138,20 @@ namespace ControllerTests
                 WantsWaterDrinkNotification = true,
                 WantsWeatherForecast = false
             });
+        }
+
+        [Fact]
+        public async Task RemoveUser_Correct()
+        {
+            var response = await DeleteUser("123456789012345678901234");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task RemoveUser_Wrong_Id()
+        {
+            var response = await DeleteUser("1234567890123456789012345");
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }
