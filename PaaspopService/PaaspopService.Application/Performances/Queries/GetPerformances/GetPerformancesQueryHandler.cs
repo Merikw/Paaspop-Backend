@@ -25,12 +25,13 @@ namespace PaaspopService.Application.Performances.Queries.GetPerformances
             var performances = await _performancesRepository.GetPerformances();
             var favoritePerformancesFromUser = await Mediator.Send(new GetFavoritePerformancesFromUserQuery {UserId = request.UserId}, cancellationToken);
             var mappedResult = Mapper.Map<PerformanceViewModel>(performances);
-            foreach (var entry in mappedResult.Performances) entry.Value.Sort();
             if (favoritePerformancesFromUser.Count >= 5)
             {
-                mappedResult.SuggestionPerformances =
-                    Performance.GetSuggestions(favoritePerformancesFromUser, performances);
+                var suggestions = Performance.GetSuggestions(favoritePerformancesFromUser, performances);;
+                mappedResult.SuggestionPerformances = suggestions;
+                mappedResult.Performances.Add("Suggesties voor jou!", suggestions);
             }
+            foreach (var entry in mappedResult.Performances) entry.Value.Sort();
             return mappedResult;
         }
     }
