@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
 
@@ -35,6 +37,13 @@ namespace PaaspopService.Domain.Entities
             }
 
             return interestPercentage >= 0 ? new Percentage(interestPercentage, (double) userCount) : InterestPercentage;
-        } 
+        }
+
+        public static List<Performance> GetSuggestions(List<Performance> favoritesFromUser, List<Performance> performances)
+        {
+            var favoriteGenres = favoritesFromUser.SelectMany(p => p.Artist.Genres).ToList().GroupBy(item => item).OrderByDescending(group => group.Count()).Select(g => g.Key).Take(3).ToList();
+            return performances.Where(p => favoritesFromUser.All(fp => fp.Id != p.Id)).OrderByDescending(performance =>
+                performance.Artist.Genres.Intersect(favoriteGenres).Count()).Take(10).ToList();
+        }
     }
 }

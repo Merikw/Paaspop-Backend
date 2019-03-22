@@ -13,7 +13,8 @@ namespace PaaspopService.Application.Infrastructure.MapProfiles
         {
             CreateMap<List<Performance>, PerformanceViewModel>()
                 .ForMember(dest => dest.Performances,
-                    opt => opt.MapFrom(src => src.GroupBy(x => x.Stage.Name).ToDictionary(x => x.Key, x => x.ToList())));
+                    opt => opt.MapFrom(src =>
+                        src.GroupBy(x => x.Stage.Name).ToDictionary(x => x.Key, x => x.ToList())));
         }
     }
 }
