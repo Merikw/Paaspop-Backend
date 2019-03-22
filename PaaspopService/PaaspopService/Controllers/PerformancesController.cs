@@ -10,10 +10,10 @@ namespace PaaspopService.WebApi.Controllers
     [ApiController]
     public class PerformancesController : BaseController
     {
-        [HttpGet]
-        public async Task<ActionResult<PerformanceViewModel>> Get()
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<PerformanceViewModel>> Get(string userId)
         {
-            var result = await GetMediator().Send(new GetPerformancesQuery());
+            var result = await GetMediator().Send(new GetPerformancesQuery { UserId =  userId });
             var arrayDictResult = JsonConvert.SerializeObject(result, JsonDictionaryAsArrayResolver);
             return Ok(arrayDictResult);
         }

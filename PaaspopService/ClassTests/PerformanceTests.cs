@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using MongoDB.Bson;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.Exceptions;
@@ -54,17 +54,6 @@ namespace ClassTests
 
             var result = performance.CalculateInterestPercentage(100, 1, Operator.Minus);
             result.AbsolutePercentage.Should().Be(11);
-        }
-
-        [Fact]
-        public void CalculateInterestPercentage_wrong_exception_minus()
-        {
-            var performance = new Performance()
-            {
-                InterestPercentage = new Percentage(12, 100)
-            };
-
-            Assert.Throws<PercentageInvalidException>(() => performance.CalculateInterestPercentage(1, 1, Operator.Minus));
         }
     }
 }

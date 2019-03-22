@@ -1,5 +1,4 @@
 using FluentAssertions;
-using MongoDB.Bson;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.Exceptions;
