@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -28,6 +29,8 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
             foreach (var performance in user.FavoritePerformances)
             {
                 performance.InterestPercentage = performance.CalculateInterestPercentage((int) userCount, 1, Operator.Minus);
+                performance.UsersFavoritedPerformance.Remove(
+                    performance.UsersFavoritedPerformance.FirstOrDefault(userId => userId == user.Id));
                 await Mediator.Send(new UpdatePerformanceCommand {performanceToBeUpdated = performance}, cancellationToken);
             }
 
