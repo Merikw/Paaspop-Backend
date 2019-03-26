@@ -33,7 +33,8 @@ namespace PaaspopService.Persistence.Repositories
             var update = Builders<Performance>.Update.Set("PerformanceTime", performance.PerformanceTime)
                 .Set("InterestPercentage", performance.InterestPercentage)
                 .Set("Stage", performance.Stage)
-                .Set("Artist", performance.Artist);
+                .Set("Artist", performance.Artist)
+                .Set("UsersFavoritedPerformance", performance.UsersFavoritedPerformance);
             await DbContext.GetPerformances().FindOneAndUpdateAsync<Performance>(filter, update);
             return performance;
         }

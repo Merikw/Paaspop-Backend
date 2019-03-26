@@ -39,7 +39,7 @@ namespace PaaspopService.WebApi.Controllers
         }
 
         [HttpDelete("{userId}")]
-        public async Task<IActionResult> Update(string userId)
+        public async Task<IActionResult> Remove(string userId)
         {
 
             var result = await GetMediator().Send(new RemoveUserCommand() { UserId = userId });

@@ -12,6 +12,7 @@ namespace PaaspopService.Domain.Entities
         public Percentage InterestPercentage { get; set; }
         public Stage Stage { get; set; }
         public Artist Artist { get; set; }
+        public ISet<string> UsersFavoritedPerformance { get; set; } = new HashSet<string>();
 
         public int CompareTo(Performance other)
         {
