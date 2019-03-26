@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MediatR;
+using PaaspopService.Application.Infrastructure.Enums;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.ValueObjects;
 
@@ -14,5 +15,6 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
         public bool WantsWaterDrinkNotification { get; set; } 
         public LocationCoordinate CurrentLocation { get; set; }
         public ISet<Performance> FavoritePerformances { get; set; }
+        public UserUpdateType UserUpdateType { get; set; }
     }
 }
