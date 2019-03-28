@@ -7,5 +7,6 @@ namespace PaaspopService.Application.Users.Commands.CreateUser
     {
         public int Gender { get; set; }
         public int Age { get; set; }
+        public string NotificationToken { get; set; }
     }
 }
