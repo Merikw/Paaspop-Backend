@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using PaaspopService.Domain.Entities;
 
 namespace PaaspopService.Application.Infrastructure.Repositories
@@ -10,5 +11,6 @@ namespace PaaspopService.Application.Infrastructure.Repositories
         Task<long> GetUsersCountAsync();
         Task<User> GetUserByIdAsync(string id);
         Task RemoveUserAsync(string id);
+        Task<List<User>> GetUsersByFavorites(string performanceId);
     }
 }

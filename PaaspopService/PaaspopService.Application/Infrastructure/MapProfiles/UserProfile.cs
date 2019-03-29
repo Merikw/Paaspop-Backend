@@ -17,7 +17,9 @@ namespace PaaspopService.Application.Infrastructure.MapProfiles
                 .ForMember(dest => dest.Gender,
                     opts => opts.MapFrom(src => (Gender) src.Gender))
                 .ForMember(dest => dest.Age,
-                    opts => opts.MapFrom(src => new Age(src.Age)));
+                    opts => opts.MapFrom(src => new Age(src.Age)))
+                .ForMember(dest => dest.NotificationToken,
+                    opts => opts.MapFrom(src => src.NotificationToken));
 
             CreateMap<UpdateUserCommand, User>()
                 .ForMember(dest => dest.Id,

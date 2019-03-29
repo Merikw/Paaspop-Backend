@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
+using PaaspopService.Application.Infrastructure.PushNotifications;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
 using PaaspopService.Application.Infrastructure.Validators;
@@ -62,7 +63,8 @@ namespace PaaspopService.WebApi
                 .AddScoped<IRequestHandler<GetPerformancesQuery, PerformanceViewModel>, GetPerformancesQueryHandler>()
                 .AddScoped<IRequestHandler<GetPerformanceByIdQuery, Performance>, GetPerformanceByIdHandler>()
                 .AddScoped<IRequestHandler<UpdatePerformanceCommand, Performance>, UpdatePerformanceHandler>()
-                .AddScoped<IRequestHandler<GetFavoritePerformancesFromUserQuery, List<Performance>>, GetFavoritePerformancesFromUserHandler>()
+                .AddScoped<IRequestHandler<GetFavoritePerformancesFromUserQuery, List<Performance>>,
+                    GetFavoritePerformancesFromUserHandler>()
                 .AddScoped<IRequestHandler<CreateUserCommand, User>, CreateUserHandler>()
                 .AddScoped<IRequestHandler<UpdateUserCommand, User>, UpdateUserHandler>()
                 .AddScoped<IRequestHandler<RemoveUserCommand, Unit>, RemoveUserHandler>()

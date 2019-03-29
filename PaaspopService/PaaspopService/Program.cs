@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using PaaspopService.Application.Infrastructure.PushNotifications;
 
 namespace PaaspopService.WebApi
 {
@@ -7,7 +8,7 @@ namespace PaaspopService.WebApi
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().ScheduleArtistStartNotifications().GetAwaiter().GetResult().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
