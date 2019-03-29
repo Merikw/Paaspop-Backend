@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace PaaspopService.Application.Infrastructure.PushNotifications
 {
-    public class Notification
+    public class Notification   
     {
-        public string Title { get; set; }
-        public string Text { get; set; }
+        [JsonProperty(PropertyName = "notification")]
+        public NotificationMessage NotificationMessage { get; set; }
+        [JsonProperty(PropertyName = "to")]
+        public string DeviceToken { get; set; }
+        [JsonProperty(PropertyName = "priority")]
+        public string Priority { get; } = "high";
     }
 }

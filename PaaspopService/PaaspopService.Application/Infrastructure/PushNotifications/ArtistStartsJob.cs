@@ -15,31 +15,43 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications
         public async Task Execute(IJobExecutionContext context)
         {
             var performance = (Performance) context.MergedJobDataMap["performance"];
-            var userRepository = (IUsersRepository)context.MergedJobDataMap["userRepository"];
-            var users = await userRepository.GetUsersByFavorites(performance.Id);
-            var deviceTokens = users.Select(u => u.NotificationToken).ToArray();
-
-            var messageInformation = new NotificationMessage
+            var hour = (int)context.MergedJobDataMap["hour"];
+            var minute = (int)context.MergedJobDataMap["minute"];
+            var now = DateTime.UtcNow;
+            if (now.Day < performance.PerformanceTime.Day + 14 || (now.Day == performance.PerformanceTime.Day + 14
+                                                                   && now.Hour < hour)
+                                                               || (now.Day == performance.PerformanceTime.Day + 14
+                                                                   && now.Hour == hour && now.Minute <= minute))
             {
-                Notification = new Notification
+                var userRepository = (IUsersRepository) context.MergedJobDataMap["usersRepository"];
+                var users = await userRepository.GetUsersByFavorites(performance.Id);
+
+                foreach (var user in users)
                 {
-                    Title = performance.Artist.Name + " begint zo!",
-                    Text = performance.Artist.Name + " begint over 10 minuten op " + performance.Stage.Name
-                },
-                Registration_ids = deviceTokens
-            };
+                    var messageInformation = new Notification
+                    {
+                        NotificationMessage = new NotificationMessage()
+                        {
+                            Title = performance.Artist.Name + " begint zo!",
+                            Body = performance.Artist.Name + " begint over 10 minuten op " + performance.Stage.Name
+                        },
+                        DeviceToken = user.NotificationToken
+                    };
 
-            var authorizationKey = $"key={Environment.GetEnvironmentVariable("FCM_KEY")}";
-            var jsonBody = JsonConvert.SerializeObject(messageInformation);
+                    var authorizationKey = $"key={Environment.GetEnvironmentVariable("FCM_KEY")}";
+                    var jsonBody = JsonConvert.SerializeObject(messageInformation);
 
-            using (var client = new HttpClient())
-            {
-                using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send"))
-                {
-                    httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
-                    httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                    using (var client = new HttpClient())
+                    {
+                        using (var httpRequest =
+                            new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send"))
+                        {
+                            httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
+                            httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                    await client.SendAsync(httpRequest);
+                            await client.SendAsync(httpRequest);
+                        }
+                    }
                 }
             }
         }

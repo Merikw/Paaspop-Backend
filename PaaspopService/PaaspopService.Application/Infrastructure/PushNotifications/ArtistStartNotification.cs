@@ -26,8 +26,8 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications
                 var performances = await performancesRepository.GetPerformances();
                 foreach (var performance in performances)
                 {
-                    int.TryParse(performance.PerformanceTime.StartTime.Substring(0, 2), out int hour);
-                    int.TryParse(performance.PerformanceTime.StartTime.Substring(3, 2), out int minute);
+                    int.TryParse(performance.PerformanceTime.StartTime.Substring(0, 2), out var hour);
+                    int.TryParse(performance.PerformanceTime.StartTime.Substring(3, 2), out var minute);
                     minute = minute - 10;
                     if (minute < 10)
                     {
@@ -41,11 +41,13 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications
 
                     job.JobDataMap.Put("performance", performance);
                     job.JobDataMap.Put("usersRepository", usersRepository);
+                    job.JobDataMap.Put("hour", hour);
+                    job.JobDataMap.Put("minute", minute);
 
                     var simpleTrigger = (ISimpleTrigger) TriggerBuilder.Create()
                         .WithIdentity("trigger" + performance.Id, "ArtistPlays")
-                        .StartAt(new DateTimeOffset(2019, 3, 28, 10, 19, 15,
-                            TimeSpan.Zero))
+                        .StartAt(new DateTimeOffset(2019, 4, performance.PerformanceTime.Day + 14,
+                            hour, minute, 0, TimeSpan.Zero))
                         .ForJob("job" + performance.Id, "ArtistPlays")
                         .Build();
 

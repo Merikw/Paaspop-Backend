@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace PaaspopService.Application.Infrastructure.PushNotifications
 {
     public class NotificationMessage
     {
-        public string[] Registration_ids { get; set; }
-        public Notification Notification { get; set; }
-        public object Data { get; set; }
+        [JsonProperty(PropertyName = "body")]
+        public string Body { get; set; }
+        [JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
     }
 }
