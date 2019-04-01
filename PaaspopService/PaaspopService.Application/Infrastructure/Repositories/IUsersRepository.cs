@@ -12,5 +12,6 @@ namespace PaaspopService.Application.Infrastructure.Repositories
         Task<User> GetUserByIdAsync(string id);
         Task RemoveUserAsync(string id);
         Task<List<User>> GetUsersByFavorites(string performanceId);
+        Task<List<User>> GetUsersByBoolField(string field, bool status);
     }
 }

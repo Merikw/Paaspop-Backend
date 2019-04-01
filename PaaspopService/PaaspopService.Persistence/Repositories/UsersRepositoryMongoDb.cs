@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -53,6 +52,14 @@ namespace PaaspopService.Persistence.Repositories
         public async Task<List<User>> GetUsersByFavorites(string performanceId)
         {
             var filter = Builders<User>.Filter.ElemMatch(u => u.FavoritePerformances, f => f.Id == performanceId);
+            var result = await DbContext.GetUsers().FindAsync(filter);
+            var userList = await result.ToListAsync();
+            return userList;
+        }
+
+        public async Task<List<User>> GetUsersByBoolField(string field, bool status)
+        {
+            var filter = Builders<User>.Filter.Eq(field, status);
             var result = await DbContext.GetUsers().FindAsync(filter);
             var userList = await result.ToListAsync();
             return userList;

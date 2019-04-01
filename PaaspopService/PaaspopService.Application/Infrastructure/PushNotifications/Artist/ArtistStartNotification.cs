@@ -6,7 +6,7 @@ using PaaspopService.Application.Infrastructure.Repositories;
 using Quartz;
 using Quartz.Impl;
 
-namespace PaaspopService.Application.Infrastructure.PushNotifications
+namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
 {
     public static class ArtistStartNotification
     {
