@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +7,9 @@ using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Domain.Entities;
 using Quartz;
 
-namespace PaaspopService.Application.Infrastructure.PushNotifications
+namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
 {
-    public class ArtistStartsJob : NotificationSettings, IJob
+    public class ArtistStartsJob : IJob
     {
         public async Task Execute(IJobExecutionContext context)
         {
