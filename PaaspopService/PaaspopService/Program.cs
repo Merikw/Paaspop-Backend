@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using PaaspopService.Application.Infrastructure.PushNotifications;
 using PaaspopService.Application.Infrastructure.PushNotifications.Artist;
+using PaaspopService.Application.Infrastructure.PushNotifications.Water;
 using PaaspopService.Application.Infrastructure.PushNotifications.Weather;
 
 namespace PaaspopService.WebApi
@@ -10,7 +10,9 @@ namespace PaaspopService.WebApi
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().ScheduleArtistStartNotifications().GetAwaiter().GetResult().ScheduleWeatherNotification().GetAwaiter().GetResult().Run();
+            CreateWebHostBuilder(args).Build().ScheduleArtistStartNotifications().GetAwaiter().GetResult()
+                .ScheduleWeatherNotification().GetAwaiter().GetResult()
+                .ScheduleWaterDrinkNotification().GetAwaiter().GetResult().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
