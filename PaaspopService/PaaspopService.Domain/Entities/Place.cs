@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PaaspopService.Common.DistanceBetweenCoordinates;
 using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
