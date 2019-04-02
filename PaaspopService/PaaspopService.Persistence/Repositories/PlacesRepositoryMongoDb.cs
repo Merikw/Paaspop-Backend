@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Domain.Entities;
+using PaaspopService.Domain.Enumerations;
 using PaaspopService.Persistence.Contexts;
 
 
@@ -30,6 +32,14 @@ namespace PaaspopService.Persistence.Repositories
                 .Set("Location", place.Location)
                 .Set("UsersOnPlace", place.UsersOnPlace);
             await DbContext.GetPlaces().FindOneAndUpdateAsync<Place>(filter, update);
+        }
+
+        public async Task<List<Place>> GetPlacesByType(PlaceType type)
+        {
+            var filter = Builders<Place>.Filter.Eq("Type", type);
+            var result = await DbContext.GetPlaces().FindAsync(filter);
+            var placesList = await result.ToListAsync();
+            return placesList;
         }
     }
 }

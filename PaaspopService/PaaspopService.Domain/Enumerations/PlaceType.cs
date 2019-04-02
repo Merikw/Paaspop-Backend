@@ -4,6 +4,7 @@
     {
         Toilet = 0,
         Bar = 1,
-        Food = 2
+        Food = 2,
+        MeetingPoint = 3,
     }
 }
