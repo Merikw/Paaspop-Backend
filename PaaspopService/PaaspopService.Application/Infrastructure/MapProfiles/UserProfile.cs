@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using MongoDB.Bson;
 using PaaspopService.Application.Users.Commands.CreateUser;
@@ -35,7 +36,7 @@ namespace PaaspopService.Application.Infrastructure.MapProfiles
                 .ForMember(dest => dest.WantsWeatherForecast,
                     opts => opts.MapFrom(src => src.WantsWeatherForecast))
                 .ForMember(dest => dest.FavoritePerformances,
-                    opts => opts.MapFrom(src => new HashSet<Performance>(src.FavoritePerformances)));
+                    opts => opts.MapFrom(src => new HashSet<string>(src.FavoritePerformances)));
         }
     }
 }

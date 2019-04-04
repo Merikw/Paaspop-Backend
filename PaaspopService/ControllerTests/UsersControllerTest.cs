@@ -66,7 +66,7 @@ namespace ControllerTests
                 Age = new Age(80),
                 Gender = 1,
                 CurrentLocation = new LocationCoordinate(6.7, 90.3),
-                FavoritePerformances = new HashSet<Performance>(),
+                FavoritePerformances = new HashSet<string>(),
                 WantsWaterDrinkNotification = true,
                 WantsWeatherForecast = false
             };
@@ -85,7 +85,7 @@ namespace ControllerTests
                 Age = new Age(150),
                 Gender = 1,
                 CurrentLocation = new LocationCoordinate(6.7, 90.3),
-                FavoritePerformances = new HashSet<Performance>(),
+                FavoritePerformances = new HashSet<string>(),
                 WantsWaterDrinkNotification = true,
                 WantsWeatherForecast = false
             });
@@ -99,7 +99,7 @@ namespace ControllerTests
                 Age = new Age(80),
                 Gender = 3,
                 CurrentLocation = new LocationCoordinate(6.7, 90.3),
-                FavoritePerformances = new HashSet<Performance>(),
+                FavoritePerformances = new HashSet<string>(),
                 WantsWaterDrinkNotification = true,
                 WantsWeatherForecast = false
             };
@@ -118,7 +118,7 @@ namespace ControllerTests
                 Age = new Age(80),
                 Gender = 1,
                 CurrentLocation = new LocationCoordinate(688.4, 90.3),
-                FavoritePerformances = new HashSet<Performance>(),
+                FavoritePerformances = new HashSet<string>(),
                 WantsWaterDrinkNotification = true,
                 WantsWeatherForecast = false
             });
@@ -134,7 +134,7 @@ namespace ControllerTests
                 Age = new Age(80),
                 Gender = 1,
                 CurrentLocation = new LocationCoordinate(6.7, -1000.3),
-                FavoritePerformances = new HashSet<Performance>(),
+                FavoritePerformances = new HashSet<string>(),
                 WantsWaterDrinkNotification = true,
                 WantsWeatherForecast = false
             });

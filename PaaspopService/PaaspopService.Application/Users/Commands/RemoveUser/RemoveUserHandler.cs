@@ -7,6 +7,7 @@ using MediatR;
 using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Performances.Commands.UpdatePerformance;
+using PaaspopService.Application.Performances.Queries.GetPerformancesById;
 using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Domain.Enumerations;
@@ -26,8 +27,9 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
         {
             var user = await _usersRepository.GetUserByIdAsync(request.UserId);
             var userCount = await _usersRepository.GetUsersCountAsync();
-            foreach (var performance in user.FavoritePerformances)
+            foreach (var performanceId in user.FavoritePerformances)
             {
+                var performance = await Mediator.Send(new GetPerformanceByIdQuery {Id = performanceId}, cancellationToken);
                 performance.InterestPercentage = performance.CalculateInterestPercentage((int) userCount, 1, Operator.Minus);
                 performance.UsersFavoritedPerformance.Remove(
                     performance.UsersFavoritedPerformance.FirstOrDefault(userId => userId == user.Id));
