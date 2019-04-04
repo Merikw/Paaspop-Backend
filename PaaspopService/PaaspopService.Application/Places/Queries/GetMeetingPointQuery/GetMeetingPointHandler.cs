@@ -6,6 +6,7 @@ using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.Enumerations;
+using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Application.Places.Queries.GetMeetingPointQuery
 {
@@ -21,7 +22,10 @@ namespace PaaspopService.Application.Places.Queries.GetMeetingPointQuery
         public override async Task<Place> Handle(GetMeetingPointQuery request, CancellationToken cancellationToken)
         {
             var places = await _placesRepository.GetPlacesByType(PlaceType.MeetingPoint);
-            var closestPlace = places[0];
+            var closestPlace = new Place()
+            {
+                Location = new LocationCoordinate(0.0, 0.0)
+            };
             foreach (var place in places)
             {
                 if (place.GetDistanceFrom(request.LocationOfUser).AbsoluteDistance <

@@ -41,7 +41,7 @@ namespace PaaspopService.Domain.ValueObjects
 
         private bool CheckDay(int day)
         {
-            return BetweenHandler.IsInBetween(day, 1, 7);
+            return BetweenHandler.IsInBetween(day, 0, 8);
         }
 
         private bool CheckTime(string startTime, string endTime)
