@@ -29,7 +29,6 @@ namespace PaaspopService.Application.Performances.Queries.GetPerformances
             {
                 var suggestions = Performance.GetSuggestions(favoritePerformancesFromUser, performances);;
                 mappedResult.SuggestionPerformances = suggestions;
-                mappedResult.Performances.Add("Suggesties voor jou!", suggestions);
             }
             foreach (var entry in mappedResult.Performances) entry.Value.Sort();
             return mappedResult;

@@ -25,14 +25,14 @@ namespace PaaspopService.Domain.Entities
             return PerformanceTime.Day < other.PerformanceTime.Day ? -1 : 1;
         }
             
-        public Percentage CalculateInterestPercentage(int userCount, int amountOfUsers, Operator opperator) 
+        public Percentage CalculateInterestPercentage(int userCount, int amountOfUsers, Operator opperator)
         {
-            var interestPercentage = (double)userCount * InterestPercentage.AbsolutePercentage / 100;
+            var interestPercentage = UsersFavoritedPerformance.Count;
             if (opperator == Operator.Plus)
             {
                 interestPercentage = interestPercentage + amountOfUsers;
             }
-            else
+            else if(opperator == Operator.Minus)
             {
                 interestPercentage = interestPercentage - amountOfUsers;
             }
