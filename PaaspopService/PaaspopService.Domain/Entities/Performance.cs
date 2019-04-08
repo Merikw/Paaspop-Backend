@@ -13,15 +13,18 @@ namespace PaaspopService.Domain.Entities
         public Stage Stage { get; set; }
         public Artist Artist { get; set; }
         public ISet<string> UsersFavoritedPerformance { get; set; } = new HashSet<string>();
+        public int PerformanceId { get; set; }
 
         public int CompareTo(Performance other)
         {
+            if (PerformanceTime == null) return -1;
+            if (other.PerformanceTime == null) return 1;
+            if (PerformanceTime.Day == other.PerformanceTime.Day &&
+                string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 0) return 0;
             if (PerformanceTime.Day > other.PerformanceTime.Day &&
                 string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 1) return 1;
             if (PerformanceTime.Day == other.PerformanceTime.Day &&
                 string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 1) return 1;
-            if (PerformanceTime.Day == other.PerformanceTime.Day &&
-                string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 0) return 0;
             return PerformanceTime.Day < other.PerformanceTime.Day ? -1 : 1;
         }
             

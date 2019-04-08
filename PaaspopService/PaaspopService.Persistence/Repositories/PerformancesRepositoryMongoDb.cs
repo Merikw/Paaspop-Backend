@@ -38,5 +38,15 @@ namespace PaaspopService.Persistence.Repositories
             await DbContext.GetPerformances().FindOneAndUpdateAsync<Performance>(filter, update);
             return performance;
         }
+
+        public async Task InsertPerformance(Performance performance)
+        {
+            var filter = Builders<Performance>.Filter.Eq("PerformanceId", performance.PerformanceId);
+            var result = await DbContext.GetPerformances().FindAsync(filter);
+            if (result.FirstOrDefault() == null)
+            {
+                await DbContext.GetPerformances().InsertOneAsync(performance);
+            }
+        }
     }
 }
