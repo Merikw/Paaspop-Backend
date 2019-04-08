@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PaaspopService.Common.Handlers;
 using PaaspopService.Domain.Enumerations;
 using PaaspopService.Domain.ValueObjects;
 
@@ -17,15 +18,22 @@ namespace PaaspopService.Domain.Entities
 
         public int CompareTo(Performance other)
         {
-            if (PerformanceTime == null) return -1;
-            if (other.PerformanceTime == null) return 1;
+            if (PerformanceTime == null) return 1;
+            if (other.PerformanceTime == null) return -1;
             if (PerformanceTime.Day == other.PerformanceTime.Day &&
-                string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 0) return 0;
-            if (PerformanceTime.Day > other.PerformanceTime.Day &&
-                string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 1) return 1;
+                BetweenHandler.IsInBetween(Convert.ToInt32(PerformanceTime.StartTime.Substring(0, 2)), 0, 8) &&
+                 !BetweenHandler.IsInBetween(Convert.ToInt32(other.PerformanceTime.StartTime.Substring(0, 2)), 0, 8))
+            {
+                return 1;
+            }
+
             if (PerformanceTime.Day == other.PerformanceTime.Day &&
-                string.Compare(PerformanceTime.StartTime, other.PerformanceTime.StartTime, StringComparison.Ordinal) == 1) return 1;
-            return PerformanceTime.Day < other.PerformanceTime.Day ? -1 : 1;
+                !BetweenHandler.IsInBetween(Convert.ToInt32(PerformanceTime.StartTime.Substring(0, 2)), 0, 8) &&
+                BetweenHandler.IsInBetween(Convert.ToInt32(other.PerformanceTime.StartTime.Substring(0, 2)), 0, 8))
+            {
+                return -1;
+            }
+            return string.Compare(PerformanceTime.PerformanceTimeText, other.PerformanceTime.PerformanceTimeText, StringComparison.Ordinal);
         }
             
         public Percentage CalculateInterestPercentage(int userCount, int amountOfUsers, Operator opperator)

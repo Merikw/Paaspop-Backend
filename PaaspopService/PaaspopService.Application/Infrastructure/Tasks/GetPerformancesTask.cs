@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +42,8 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                                     var startTime = (string) performance.start;
                                     var endTime = (string) performance.end;
                                     var photo = (string) performance.photo;
+                                    var stageName = (string) stage.title;
+                                    var artistName = (string) performance.title;
                                     switch ((string) performance.day)
                                     {
                                         case "Vrijdag":
@@ -62,17 +65,18 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                                         PerformanceId = performance.id,
                                         Artist = new Artist
                                         {
+                                            Genres = new HashSet<string>(),
                                             ImageLink = photo != null
                                                 ? new UrlLink("https:" + (string) performance.photo)
                                                 : null,
-                                            Name = performance.title,
+                                            Name = artistName.Contains("&#8217;") ? artistName.Replace("&#8217;", "'") : artistName.Contains("&amp;") ? artistName.Replace("&amp;", "&") : artistName,
                                             Summary = performance.title
                                         },
                                         InterestPercentage = new Percentage(0),
                                         PerformanceTime = IsNullOrEmpty(startTime) || IsNullOrEmpty(endTime) ? null : new PerformanceTime(dayOfWeek, startTime, endTime),
                                         Stage = new Stage
                                         {
-                                            Name = stage.title
+                                            Name = stageName.Contains("&#8217;") ? stageName.Replace("&#8217;", "'") : stageName
                                         },
                                     };
 
