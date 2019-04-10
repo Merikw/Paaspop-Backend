@@ -1,5 +1,4 @@
-﻿using System;
-using FluentValidation.Results;
+﻿using FluentValidation.Results;
 using PaaspopService.Common.Middleware;
 
 namespace PaaspopService.Application.Infrastructure.Exceptions

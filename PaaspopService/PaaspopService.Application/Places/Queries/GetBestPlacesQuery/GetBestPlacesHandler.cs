@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,7 +16,8 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
             _placessRepository = placesRepository;
         }
 
-        public override async Task<BestPlacesViewModel> Handle(GetBestPlacesQuery request, CancellationToken cancellationToken)
+        public override async Task<BestPlacesViewModel> Handle(GetBestPlacesQuery request,
+            CancellationToken cancellationToken)
         {
             var places = await _placessRepository.GetPlaces();
             var bestPlacesDict = new Dictionary<string, List<BestPlace>>();
@@ -34,7 +34,9 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
                 {
                     bestPlacesList = new List<BestPlace>();
                 }
-                bestPlacesList?.Add(Mapper.Map<BestPlace>(place, opt => opt.Items["userlocation"] = request.UserLocationCoordinate));
+
+                bestPlacesList?.Add(Mapper.Map<BestPlace>(place,
+                    opt => opt.Items["userlocation"] = request.UserLocationCoordinate));
                 bestPlacesDict.Add(place.Type.ToString(), bestPlacesList);
                 if (maxPercentage < place.CrowdPercentage.AbsolutePercentage)
                     maxPercentage = place.CrowdPercentage.AbsolutePercentage;

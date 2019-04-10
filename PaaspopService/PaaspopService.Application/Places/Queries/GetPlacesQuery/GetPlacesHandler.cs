@@ -13,7 +13,8 @@ namespace PaaspopService.Application.Places.Queries.GetPlacesQuery
     {
         private readonly IPlacesRepository _placesRepository;
 
-        public GetPlacesHandler(IMapper mapper, IPlacesRepository placesRepository, IMediator mediator = null) : base(mapper, mediator)
+        public GetPlacesHandler(IMapper mapper, IPlacesRepository placesRepository, IMediator mediator = null) : base(
+            mapper, mediator)
         {
             _placesRepository = placesRepository;
         }

@@ -15,10 +15,11 @@ namespace PaaspopService.Application.Users.Commands.CreateUser
 {
     public class CreateUserHandler : GeneralRequestHandler<CreateUserCommand, User>
     {
-        private readonly IUsersRepository _usersRepository;
         private readonly IMediator _mediator;
+        private readonly IUsersRepository _usersRepository;
 
-        public CreateUserHandler(IMapper mapper, IUsersRepository usersRepository, IMediator mediator) : base(mapper, mediator)
+        public CreateUserHandler(IMapper mapper, IUsersRepository usersRepository, IMediator mediator) : base(mapper,
+            mediator)
         {
             _usersRepository = usersRepository;
             _mediator = mediator;
@@ -29,14 +30,14 @@ namespace PaaspopService.Application.Users.Commands.CreateUser
             var userToBeCreated = Mapper.Map<User>(request);
             await _usersRepository.CreateUserAsync(userToBeCreated);
 
-            var performances = await _mediator.Send(new GetPerformancesQuery() { UserId = userToBeCreated.Id }, cancellationToken);
+            var performances =
+                await _mediator.Send(new GetPerformancesQuery {UserId = userToBeCreated.Id}, cancellationToken);
             var places = await _mediator.Send(new GetPlacesQuery(), cancellationToken);
             var userCount = await _usersRepository.GetUsersCountAsync();
 
             foreach (var performanceLists in performances.Performances.Values)
-            {
-                performanceLists.ForEach(performance => UpdatePerformance(performance, (int)userCount).GetAwaiter().GetResult());
-            }
+                performanceLists.ForEach(performance =>
+                    UpdatePerformance(performance, (int) userCount).GetAwaiter().GetResult());
 
             places.ForEach(place => UpdatePlace(place, (int) userCount).GetAwaiter().GetResult());
 
@@ -46,13 +47,13 @@ namespace PaaspopService.Application.Users.Commands.CreateUser
         private async Task UpdatePerformance(Performance performance, int userCount)
         {
             performance.InterestPercentage = performance.CalculateInterestPercentage(userCount, 0, Operator.None);
-            await _mediator.Send(new UpdatePerformanceCommand() {performanceToBeUpdated = performance});
+            await _mediator.Send(new UpdatePerformanceCommand {performanceToBeUpdated = performance});
         }
 
         private async Task UpdatePlace(Place place, int userCount)
         {
             place.CrowdPercentage = place.CalculateCrowdPercentage(userCount, 0, Operator.None);
-            await _mediator.Send(new UpdatePlaceCommand() {  PlaceToBeUpdated = place });
+            await _mediator.Send(new UpdatePlaceCommand {PlaceToBeUpdated = place});
         }
     }
 }

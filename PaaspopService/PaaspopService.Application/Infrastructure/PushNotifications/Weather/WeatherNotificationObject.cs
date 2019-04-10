@@ -1,25 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 {
     public class WeatherNotificationObject
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-
-        private WeatherNotificationObject() { }
+        private WeatherNotificationObject()
+        {
+        }
 
         public WeatherNotificationObject(int descriptionId, int temperature, int timeInMilliseconds)
         {
-            Title = $"Om {GetHourFromMilliSeconds(timeInMilliseconds)} uur wordt het {Convert.ToString(temperature)} graden met {GetDescriptionFromId(descriptionId)}";
+            Title =
+                $"Om {GetHourFromMilliSeconds(timeInMilliseconds)} uur wordt het {Convert.ToString(temperature)} graden met {GetDescriptionFromId(descriptionId)}";
             Description = GetTitleFromIdAndTemperature(descriptionId, temperature);
         }
 
+        public string Title { get; set; }
+        public string Description { get; set; }
+
         private string GetHourFromMilliSeconds(int milliseconds)
         {
-            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(milliseconds).ToLocalTime();
             return dtDateTime.Hour.ToString();
         }
@@ -30,16 +31,11 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
             string title;
 
             if (temperature < 14)
-            {
                 title = "Kleed je warm aan";
-            } else if (temperature >= 14 && temperature < 20)
-            {
+            else if (temperature >= 14 && temperature < 20)
                 title = "Houd warme kleren bij de hand";
-            }
             else
-            {
                 title = "Het wordt warm";
-            }
 
             switch (firstDiget)
             {

@@ -21,7 +21,7 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
 
         public int GetCombination(Distance distance, Percentage crowdPercentage)
         {
-            return distance.AbsoluteDistance + (crowdPercentage.AbsolutePercentage * 5);
+            return distance.AbsoluteDistance + crowdPercentage.AbsolutePercentage * 5;
         }
     }
 }

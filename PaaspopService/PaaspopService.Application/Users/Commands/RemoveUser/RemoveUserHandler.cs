@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,7 +7,6 @@ using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Performances.Commands.UpdatePerformance;
 using PaaspopService.Application.Performances.Queries.GetPerformances;
-using PaaspopService.Application.Performances.Queries.GetPerformancesById;
 using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Domain.Entities;
@@ -18,10 +16,11 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
 {
     public class RemoveUserHandler : GeneralRequestHandler<RemoveUserCommand, Unit>
     {
-        private readonly IUsersRepository _usersRepository;
         private readonly IMediator _mediator;
+        private readonly IUsersRepository _usersRepository;
 
-        public RemoveUserHandler(IMapper mapper, IUsersRepository usersRepository, IMediator mediator) : base(mapper, mediator)
+        public RemoveUserHandler(IMapper mapper, IUsersRepository usersRepository, IMediator mediator) : base(mapper,
+            mediator)
         {
             _usersRepository = usersRepository;
             _mediator = mediator;
@@ -30,17 +29,16 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
         public override async Task<Unit> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _usersRepository.GetUserByIdAsync(request.UserId);
-            var performances = await _mediator.Send(new GetPerformancesQuery() { UserId = user.Id }, cancellationToken);
+            var performances = await _mediator.Send(new GetPerformancesQuery {UserId = user.Id}, cancellationToken);
             var places = await _mediator.Send(new GetPlacesQuery(), cancellationToken);
             await _usersRepository.RemoveUserAsync(request.UserId);
             var userCount = await _usersRepository.GetUsersCountAsync();
 
             foreach (var performanceLists in performances.Performances.Values)
-            {
-                performanceLists.ForEach(performance => UpdatePerformance(performance, (int)userCount, user).GetAwaiter().GetResult());
-            }
+                performanceLists.ForEach(performance =>
+                    UpdatePerformance(performance, (int) userCount, user).GetAwaiter().GetResult());
 
-            places.ForEach(place => UpdatePlace(place, (int)userCount, user).GetAwaiter().GetResult());
+            places.ForEach(place => UpdatePlace(place, (int) userCount, user).GetAwaiter().GetResult());
             return Unit.Value;
         }
 
@@ -56,7 +54,8 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
             {
                 performance.InterestPercentage = performance.CalculateInterestPercentage(userCount, 0, Operator.None);
             }
-            await Mediator.Send(new UpdatePerformanceCommand { performanceToBeUpdated = performance });
+
+            await Mediator.Send(new UpdatePerformanceCommand {performanceToBeUpdated = performance});
         }
 
         private async Task UpdatePlace(Place place, int userCount, User user)
@@ -73,7 +72,7 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
                     place.CalculateCrowdPercentage(userCount, 1, Operator.Minus);
             }
 
-            await Mediator.Send(new UpdatePlaceCommand { PlaceToBeUpdated = place });
+            await Mediator.Send(new UpdatePlaceCommand {PlaceToBeUpdated = place});
         }
     }
 }

@@ -11,7 +11,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
     {
         public static async Task<IWebHost> ScheduleWaterDrinkNotification(this IWebHost webHost)
         {
-            var serviceScopeFactory = (IServiceScopeFactory)webHost.Services.GetService(typeof(IServiceScopeFactory));
+            var serviceScopeFactory = (IServiceScopeFactory) webHost.Services.GetService(typeof(IServiceScopeFactory));
 
             using (var scope = serviceScopeFactory.CreateScope())
             {
@@ -27,7 +27,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
 
                 job.JobDataMap.Put("usersRepository", usersRepository);
 
-                var cronTrigger = (ICronTrigger)TriggerBuilder.Create()
+                var cronTrigger = (ICronTrigger) TriggerBuilder.Create()
                     .WithIdentity("trigger" + "waterdrink", "waterdrink")
                     .WithCronSchedule("0 0 0/2 ? * * *")
                     .ForJob("job" + "waterdrink", "waterdrink")

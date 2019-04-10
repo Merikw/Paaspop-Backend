@@ -13,7 +13,8 @@ namespace PaaspopService.Application.Performances.Queries.GetPerformances
     {
         private readonly IPerformancesRepository _performancesRepository;
 
-        public GetPerformancesQueryHandler(IMapper mapper, IPerformancesRepository performanceRepository, IMediator mediator)
+        public GetPerformancesQueryHandler(IMapper mapper, IPerformancesRepository performanceRepository,
+            IMediator mediator)
             : base(mapper, mediator)
         {
             _performancesRepository = performanceRepository;
@@ -23,14 +24,18 @@ namespace PaaspopService.Application.Performances.Queries.GetPerformances
             CancellationToken cancellationToken)
         {
             var performances = await _performancesRepository.GetPerformances();
-            var favoritePerformancesFromUser = await Mediator.Send(new GetFavoritePerformancesFromUserQuery {UserId = request.UserId}, cancellationToken);
+            var favoritePerformancesFromUser =
+                await Mediator.Send(new GetFavoritePerformancesFromUserQuery {UserId = request.UserId},
+                    cancellationToken);
             var mappedResult = Mapper.Map<PerformanceViewModel>(performances);
             if (favoritePerformancesFromUser.Count >= 5)
             {
-                var suggestions = Performance.GetSuggestions(favoritePerformancesFromUser, performances);;
+                var suggestions = Performance.GetSuggestions(favoritePerformancesFromUser, performances);
+                ;
                 mappedResult.SuggestionPerformances = suggestions;
                 mappedResult.Performances.Add("Suggesties voor jou!", suggestions);
             }
+
             foreach (var entry in mappedResult.Performances) entry.Value.Sort();
             return mappedResult;
         }

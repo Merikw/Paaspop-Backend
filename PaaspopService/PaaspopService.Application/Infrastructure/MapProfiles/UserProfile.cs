@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using MongoDB.Bson;
 using PaaspopService.Application.Users.Commands.CreateUser;

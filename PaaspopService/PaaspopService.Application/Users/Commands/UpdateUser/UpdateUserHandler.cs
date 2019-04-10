@@ -15,7 +15,6 @@ using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Domain.Entities;
 using PaaspopService.Domain.Enumerations;
-using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Application.Users.Commands.UpdateUser
 {
@@ -23,7 +22,8 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
     {
         private readonly IUsersRepository _usersRepository;
 
-        public UpdateUserHandler(IMapper mapper, IMediator mediator, IUsersRepository usersRepository) : base(mapper, mediator)
+        public UpdateUserHandler(IMapper mapper, IMediator mediator, IUsersRepository usersRepository) : base(mapper,
+            mediator)
         {
             _usersRepository = usersRepository;
         }
@@ -54,7 +54,8 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
             var userCount = await _usersRepository.GetUsersCountAsync();
             foreach (var place in places)
             {
-                if (place.GetDistanceFrom(user.CurrentLocation).AbsoluteDistance >= 10 || place.UsersOnPlace.Contains(user.Id))
+                if (place.GetDistanceFrom(user.CurrentLocation).AbsoluteDistance >= 10 ||
+                    place.UsersOnPlace.Contains(user.Id))
                 {
                     place.UsersOnPlace.Remove(user.Id);
                     continue;
@@ -62,7 +63,7 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
 
                 place.UsersOnPlace.Add(user.Id);
                 place.CrowdPercentage = place.CalculateCrowdPercentage(Convert.ToInt32(userCount), 1, Operator.Plus);
-                await Mediator.Send(new UpdatePlaceCommand { PlaceToBeUpdated = place});
+                await Mediator.Send(new UpdatePlaceCommand {PlaceToBeUpdated = place});
             }
         }
 
@@ -75,33 +76,35 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
             foreach (var performancesValue in performances.Performances.Values)
             {
                 toBeRemovedFavorites.AddRange(
-                    performancesValue.Where(p => p.UsersFavoritedPerformance.Contains(user.Id) 
-                                           && user.FavoritePerformances.All(up => up != p.Id)).Select(p => p.Id)
+                    performancesValue.Where(p => p.UsersFavoritedPerformance.Contains(user.Id)
+                                                 && user.FavoritePerformances.All(up => up != p.Id)).Select(p => p.Id)
                 );
 
                 toBeAddedFavorites.AddRange(
                     performancesValue.Where(p => !p.UsersFavoritedPerformance.Contains(user.Id)
-                                           && user.FavoritePerformances.Any(up => up == p.Id)).Select(p => p.Id)
+                                                 && user.FavoritePerformances.Any(up => up == p.Id)).Select(p => p.Id)
                 );
             }
 
             var userCount = await _usersRepository.GetUsersCountAsync();
             foreach (var performanceId in toBeAddedFavorites)
             {
-                var performance = await Mediator.Send(new GetPerformanceByIdQuery() {Id = performanceId});
-                performance.InterestPercentage = performance.CalculateInterestPercentage((int)userCount, 1, Operator.Plus);
+                var performance = await Mediator.Send(new GetPerformanceByIdQuery {Id = performanceId});
+                performance.InterestPercentage =
+                    performance.CalculateInterestPercentage((int) userCount, 1, Operator.Plus);
                 performance.UsersFavoritedPerformance.Add(user.Id);
-                await Mediator.Send(new UpdatePerformanceCommand { performanceToBeUpdated = performance });
+                await Mediator.Send(new UpdatePerformanceCommand {performanceToBeUpdated = performance});
                 newListOfFavorites.Remove(newListOfFavorites.FirstOrDefault(p => p == performance.Id));
                 newListOfFavorites.Add(performance.Id);
             }
 
             foreach (var performanceId in toBeRemovedFavorites)
             {
-                var performance = await Mediator.Send(new GetPerformanceByIdQuery() { Id = performanceId });
-                performance.InterestPercentage = performance.CalculateInterestPercentage((int)userCount, 1, Operator.Minus);
+                var performance = await Mediator.Send(new GetPerformanceByIdQuery {Id = performanceId});
+                performance.InterestPercentage =
+                    performance.CalculateInterestPercentage((int) userCount, 1, Operator.Minus);
                 performance.UsersFavoritedPerformance.Remove(user.Id);
-                await Mediator.Send(new UpdatePerformanceCommand { performanceToBeUpdated = performance });
+                await Mediator.Send(new UpdatePerformanceCommand {performanceToBeUpdated = performance});
                 newListOfFavorites.Remove(newListOfFavorites.FirstOrDefault(p => p == performance.Id));
             }
 

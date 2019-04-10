@@ -18,7 +18,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 {
     public static class GetPerformancesTask
     {
-        private static List<string> genres = new List<string>() { "rap", "trap", "hip hop" };
+        private static readonly List<string> genres = new List<string> {"rap", "trap", "hip hop"};
 
         public static async Task<IWebHost> GetPerformances(this IWebHost webHost)
         {
@@ -128,14 +128,13 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                var response = await client.GetAsync("https://api.spotify.com/v1/recommendations/available-genre-seeds");
+                var response =
+                    await client.GetAsync("https://api.spotify.com/v1/recommendations/available-genre-seeds");
                 if (response.StatusCode != HttpStatusCode.OK) return genres;
                 dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
-                foreach (var genre in jsonObject.genres)
-                {
-                    genres.Add((string) genre);
-                }
+                foreach (var genre in jsonObject.genres) genres.Add((string) genre);
             }
+
             return genres;
         }
 
@@ -146,45 +145,35 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                    var response = await client.GetAsync("https://api.spotify.com/v1/search?q=" + performance.Artist.Name + "&type=artist&limit=1");
+                    var response = await client.GetAsync("https://api.spotify.com/v1/search?q=" +
+                                                         performance.Artist.Name + "&type=artist&limit=1");
                     if (response.StatusCode != HttpStatusCode.OK) return performance;
                     dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                     var items = jsonObject.artists.items;
                     foreach (var item in items)
-                    {   
-                        foreach (var genre in item.genres)
-                        {
-                            if (performance.Artist.Genres.Count >= 3) continue;
-                            var genreText = (string) genre;
-                            var foundGenres = genres.Where(g => genreText.Contains(g)).ToList();
-                            if (foundGenres.Count <= 0) continue;
-                            if (foundGenres.Count == 1)
-                            {
-                                performance.Artist.Genres.Add((char.ToUpper(foundGenres[0][0]) + foundGenres[0].Substring(1)));
-                            }
-                            else
-                            {
-                                foreach (var foundGenre in foundGenres)
-                                {
-                                    performance.Artist.Genres.Add(char.ToUpper(foundGenre[0]) + foundGenre.Substring(1));
-                                }
-                            }
+                    foreach (var genre in item.genres)
+                    {
+                        if (performance.Artist.Genres.Count >= 3) continue;
+                        var genreText = (string) genre;
+                        var foundGenres = genres.Where(g => genreText.Contains(g)).ToList();
+                        if (foundGenres.Count <= 0) continue;
+                        if (foundGenres.Count == 1)
+                            performance.Artist.Genres.Add(char.ToUpper(foundGenres[0][0]) +
+                                                          foundGenres[0].Substring(1));
+                        else
+                            foreach (var foundGenre in foundGenres)
+                                performance.Artist.Genres.Add(char.ToUpper(foundGenre[0]) + foundGenre.Substring(1));
 
-                            if (genreText.Contains("dutch"))
-                            {
-                                performance.Artist.Genres.Add("Nederlands");
-                            }
-                        }
+                        if (genreText.Contains("dutch")) performance.Artist.Genres.Add("Nederlands");
                     }
+
                     return performance;
                 }
             }
             catch (HttpRequestException exception)
             {
                 if (exception.InnerException.GetType() == typeof(IOException))
-                {
                     return await SetGenresOfArtist(performance, accessToken);
-                }
                 return performance;
             }
         }

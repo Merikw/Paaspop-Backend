@@ -12,13 +12,15 @@ namespace PaaspopService.Application.Performances.Queries.GetPerformancesById
     {
         private readonly IPerformancesRepository _performancesRepository;
 
-        public GetPerformanceByIdHandler(IMapper mapper, IPerformancesRepository performanceRepository, IMediator mediator)
+        public GetPerformanceByIdHandler(IMapper mapper, IPerformancesRepository performanceRepository,
+            IMediator mediator)
             : base(mapper, mediator)
         {
             _performancesRepository = performanceRepository;
         }
 
-        public override async Task<Performance> Handle(GetPerformanceByIdQuery request, CancellationToken cancellationToken)
+        public override async Task<Performance> Handle(GetPerformanceByIdQuery request,
+            CancellationToken cancellationToken)
         {
             return await _performancesRepository.GetPerformanceById(request.Id);
         }

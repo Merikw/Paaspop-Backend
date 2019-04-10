@@ -23,7 +23,7 @@ namespace PaaspopService.Common.DistanceBetweenCoordinates
             var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
                     Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-            return (earthRadiusKm * c) * 1000;
+            return earthRadiusKm * c * 1000;
         }
 
         private static double DegreesToRadians(double degrees)

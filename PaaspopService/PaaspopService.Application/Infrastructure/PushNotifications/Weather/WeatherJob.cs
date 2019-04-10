@@ -19,12 +19,15 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 
             using (var client = new HttpClient())
             {
-                    var response = await client.GetAsync("http://api.openweathermap.org/data/2.5/forecast?lat=51.642618&lon=5.4175&appid="
-                                                         + Environment.GetEnvironmentVariable("OPEN_WEATHER_APPID") + "&units=metric", HttpCompletionOption.ResponseHeadersRead);
-                    response.EnsureSuccessStatusCode();
-                    dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
-                    weatherNotificationObject = new WeatherNotificationObject(Convert.ToInt32(jsonObject.list[0].weather[0].id),
-                        Convert.ToInt32(jsonObject.list[0].main.temp), Convert.ToInt32(jsonObject.list[0].dt));
+                var response = await client.GetAsync(
+                    "http://api.openweathermap.org/data/2.5/forecast?lat=51.642618&lon=5.4175&appid="
+                    + Environment.GetEnvironmentVariable("OPEN_WEATHER_APPID") + "&units=metric",
+                    HttpCompletionOption.ResponseHeadersRead);
+                response.EnsureSuccessStatusCode();
+                dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
+                weatherNotificationObject = new WeatherNotificationObject(
+                    Convert.ToInt32(jsonObject.list[0].weather[0].id),
+                    Convert.ToInt32(jsonObject.list[0].main.temp), Convert.ToInt32(jsonObject.list[0].dt));
             }
 
             foreach (var user in users)

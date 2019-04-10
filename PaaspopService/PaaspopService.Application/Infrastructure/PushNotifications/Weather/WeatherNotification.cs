@@ -27,7 +27,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 
                 job.JobDataMap.Put("usersRepository", usersRepository);
 
-                var cronTrigger = (ICronTrigger)TriggerBuilder.Create()
+                var cronTrigger = (ICronTrigger) TriggerBuilder.Create()
                     .WithIdentity("trigger" + "weather", "ArtistPlays")
                     .WithCronSchedule("0 0 * ? * *")
                     .ForJob("job" + "weather", "WeatherForecast")

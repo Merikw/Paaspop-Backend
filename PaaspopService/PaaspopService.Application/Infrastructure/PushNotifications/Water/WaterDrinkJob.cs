@@ -12,7 +12,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
     {
         public async Task Execute(IJobExecutionContext context)
         {
-            var userRepository = (IUsersRepository)context.MergedJobDataMap["usersRepository"];
+            var userRepository = (IUsersRepository) context.MergedJobDataMap["usersRepository"];
             var users = await userRepository.GetUsersByBoolField("WantsWaterDrinkNotification", true);
 
             foreach (var user in users)
@@ -22,7 +22,8 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
                     NotificationMessage = new NotificationMessage
                     {
                         Title = "Vergeet niet om water te drinken!",
-                        Body = "Het is erg belangrijk om water te drinken op een festival om uitdroging te voorkomen, vergeet dus ook nu niet om even wat water te drinken."
+                        Body =
+                            "Het is erg belangrijk om water te drinken op een festival om uitdroging te voorkomen, vergeet dus ook nu niet om even wat water te drinken."
                     },
                     DeviceToken = user.NotificationToken
                 };

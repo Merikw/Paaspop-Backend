@@ -14,13 +14,13 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
         public async Task Execute(IJobExecutionContext context)
         {
             var performance = (Performance) context.MergedJobDataMap["performance"];
-            var hour = (int)context.MergedJobDataMap["hour"];
-            var minute = (int)context.MergedJobDataMap["minute"];
+            var hour = (int) context.MergedJobDataMap["hour"];
+            var minute = (int) context.MergedJobDataMap["minute"];
             var now = DateTime.UtcNow;
-            if (now.Day < performance.PerformanceTime.Day + 14 || (now.Day == performance.PerformanceTime.Day + 14
-                                                                   && now.Hour < hour)
-                                                               || (now.Day == performance.PerformanceTime.Day + 14
-                                                                   && now.Hour == hour && now.Minute <= minute))
+            if (now.Day < performance.PerformanceTime.Day + 14 || now.Day == performance.PerformanceTime.Day + 14
+                                                               && now.Hour < hour
+                                                               || now.Day == performance.PerformanceTime.Day + 14
+                                                               && now.Hour == hour && now.Minute <= minute)
             {
                 var userRepository = (IUsersRepository) context.MergedJobDataMap["usersRepository"];
                 var users = await userRepository.GetUsersByFavorites(performance.Id);
@@ -29,7 +29,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                 {
                     var messageInformation = new Notification
                     {
-                        NotificationMessage = new NotificationMessage()
+                        NotificationMessage = new NotificationMessage
                         {
                             Title = performance.Artist.Name + " begint zo!",
                             Body = performance.Artist.Name + " begint over 10 minuten op " + performance.Stage.Name

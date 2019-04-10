@@ -17,6 +17,8 @@ namespace ClassTests
                 CrowdPercentage = new Percentage(12, 100)
             };
 
+            for (var i = 0; i < 12; i++) place.UsersOnPlace.Add(i.ToString());
+
             var result = place.CalculateCrowdPercentage(100, 1, Operator.Plus);
             result.AbsolutePercentage.Should().Be(13);
         }
@@ -29,6 +31,8 @@ namespace ClassTests
                 CrowdPercentage = new Percentage(12, 100)
             };
 
+            for (var i = 0; i < 12; i++) place.UsersOnPlace.Add(i.ToString());
+
             Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(1, 1, Operator.Plus));
         }
 
@@ -40,6 +44,8 @@ namespace ClassTests
                 CrowdPercentage = new Percentage(12, 100)
             };
 
+            for (var i = 0; i < 12; i++) place.UsersOnPlace.Add(i.ToString());
+
             Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(0, 1, Operator.Plus));
         }
         [Fact]
@@ -49,6 +55,8 @@ namespace ClassTests
             {
                 CrowdPercentage = new Percentage(12, 100)
             };
+
+            for (var i = 0; i < 12; i++) place.UsersOnPlace.Add(i.ToString());
 
             var result = place.CalculateCrowdPercentage(100, 1, Operator.Minus);
             result.AbsolutePercentage.Should().Be(11);
@@ -61,6 +69,8 @@ namespace ClassTests
             {
                 CrowdPercentage = new Percentage(12, 100)
             };
+
+            for (var i = 0; i < 12; i++) place.UsersOnPlace.Add(i.ToString());
 
             Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(1, 1, Operator.Minus));
         }
