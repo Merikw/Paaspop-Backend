@@ -17,6 +17,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.7.3" />
     <PackageReference Include="Quartz" Version="3.0.7" />
+    <PackageReference Include="SpotifyAPI.Web" Version="4.0.0" />
+    <PackageReference Include="SpotifyAPI.Web.Auth" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
