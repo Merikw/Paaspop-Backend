@@ -23,7 +23,6 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
                                                          + Environment.GetEnvironmentVariable("OPEN_WEATHER_APPID") + "&units=metric", HttpCompletionOption.ResponseHeadersRead);
                     response.EnsureSuccessStatusCode();
                     dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
-                    var test = jsonObject.list[0].dt;
                     weatherNotificationObject = new WeatherNotificationObject(Convert.ToInt32(jsonObject.list[0].weather[0].id),
                         Convert.ToInt32(jsonObject.list[0].main.temp), Convert.ToInt32(jsonObject.list[0].dt));
             }

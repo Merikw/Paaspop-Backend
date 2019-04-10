@@ -10,6 +10,7 @@ using PaaspopService.Application.Infrastructure.Enums;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Performances.Commands.UpdatePerformance;
 using PaaspopService.Application.Performances.Queries.GetPerformances;
+using PaaspopService.Application.Performances.Queries.GetPerformancesById;
 using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Domain.Entities;
@@ -30,13 +31,17 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
         public override async Task<User> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var userToBeUpdated = Mapper.Map<User>(request);
-            if (request.UserUpdateType == UserUpdateType.Performance)
+            switch (request.UserUpdateType)
             {
-                var newFavorites = await UpdatePerformancesFromUser(userToBeUpdated);
-                userToBeUpdated.FavoritePerformances = newFavorites;
-            } else if (request.UserUpdateType == UserUpdateType.Location)
-            {
-                await UpdatePlacesFromLocationOfUser(userToBeUpdated);
+                case UserUpdateType.Performance:
+                {
+                    var newFavorites = await UpdatePerformancesFromUser(userToBeUpdated);
+                    userToBeUpdated.FavoritePerformances = newFavorites;
+                    break;
+                }
+                case UserUpdateType.Location:
+                    await UpdatePlacesFromLocationOfUser(userToBeUpdated);
+                    break;
             }
 
             await _usersRepository.UpdateUserAsync(userToBeUpdated);
@@ -61,41 +66,43 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
             }
         }
 
-        private async Task<ISet<Performance>> UpdatePerformancesFromUser(User user)
+        private async Task<ISet<string>> UpdatePerformancesFromUser(User user)
         {
             var performances = await Mediator.Send(new GetPerformancesQuery {UserId = user.Id});
-            var toBeAddedFavorites = new List<Performance>();
-            var toBeRemovedFavorites = new List<Performance>();
+            var toBeAddedFavorites = new List<string>();
+            var toBeRemovedFavorites = new List<string>();
             var newListOfFavorites = user.FavoritePerformances;
             foreach (var performancesValue in performances.Performances.Values)
             {
                 toBeRemovedFavorites.AddRange(
                     performancesValue.Where(p => p.UsersFavoritedPerformance.Contains(user.Id) 
-                                           && !user.FavoritePerformances.Any(up => up.Id == p.Id))
+                                           && user.FavoritePerformances.All(up => up != p.Id)).Select(p => p.Id)
                 );
 
                 toBeAddedFavorites.AddRange(
                     performancesValue.Where(p => !p.UsersFavoritedPerformance.Contains(user.Id)
-                                                 && user.FavoritePerformances.Any(up => up.Id == p.Id))
-                    );
+                                           && user.FavoritePerformances.Any(up => up == p.Id)).Select(p => p.Id)
+                );
             }
 
             var userCount = await _usersRepository.GetUsersCountAsync();
-            foreach (var performance in toBeAddedFavorites)
+            foreach (var performanceId in toBeAddedFavorites)
             {
+                var performance = await Mediator.Send(new GetPerformanceByIdQuery() {Id = performanceId});
                 performance.InterestPercentage = performance.CalculateInterestPercentage((int)userCount, 1, Operator.Plus);
                 performance.UsersFavoritedPerformance.Add(user.Id);
                 await Mediator.Send(new UpdatePerformanceCommand { performanceToBeUpdated = performance });
-                newListOfFavorites.Remove(newListOfFavorites.FirstOrDefault(p => p.Id == performance.Id));
-                newListOfFavorites.Add(performance);
+                newListOfFavorites.Remove(newListOfFavorites.FirstOrDefault(p => p == performance.Id));
+                newListOfFavorites.Add(performance.Id);
             }
 
-            foreach (var performance in toBeRemovedFavorites)
+            foreach (var performanceId in toBeRemovedFavorites)
             {
+                var performance = await Mediator.Send(new GetPerformanceByIdQuery() { Id = performanceId });
                 performance.InterestPercentage = performance.CalculateInterestPercentage((int)userCount, 1, Operator.Minus);
                 performance.UsersFavoritedPerformance.Remove(user.Id);
                 await Mediator.Send(new UpdatePerformanceCommand { performanceToBeUpdated = performance });
-                newListOfFavorites.Remove(newListOfFavorites.FirstOrDefault(p => p.Id == performance.Id));
+                newListOfFavorites.Remove(newListOfFavorites.FirstOrDefault(p => p == performance.Id));
             }
 
             return newListOfFavorites;

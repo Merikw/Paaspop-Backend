@@ -7,6 +7,7 @@ namespace PaaspopService.Domain.Enumerations
     public enum Operator
     {
         Plus = 0,
-        Minus = 1
+        Minus = 1,
+        None = 2
     }
 }

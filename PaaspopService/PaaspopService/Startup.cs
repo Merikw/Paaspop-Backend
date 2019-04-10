@@ -10,17 +10,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson.Serialization;
-using PaaspopService.Application.Infrastructure.PushNotifications;
 using PaaspopService.Application.Infrastructure.Repositories;
 using PaaspopService.Application.Infrastructure.Requests;
 using PaaspopService.Application.Infrastructure.Validators;
 using PaaspopService.Application.Performances.Commands.UpdatePerformance;
-using PaaspopService.Application.Performances.Queries;
 using PaaspopService.Application.Performances.Queries.GetFavoritePerformancesFromUser;
 using PaaspopService.Application.Performances.Queries.GetPerformances;
 using PaaspopService.Application.Performances.Queries.GetPerformancesById;
 using PaaspopService.Application.Places.Commands.UpdatePlace;
 using PaaspopService.Application.Places.Queries.GetBestPlacesQuery;
+using PaaspopService.Application.Places.Queries.GetMeetingPointQuery;
 using PaaspopService.Application.Places.Queries.GetPlacesQuery;
 using PaaspopService.Application.Users.Commands.CreateUser;
 using PaaspopService.Application.Users.Commands.RemoveUser;
@@ -71,6 +70,7 @@ namespace PaaspopService.WebApi
                 .AddScoped<IRequestHandler<UpdatePlaceCommand, Place>, UpdatePlaceHandler>()
                 .AddScoped<IRequestHandler<GetBestPlacesQuery, BestPlacesViewModel>, GetBestPlacesHandler>()
                 .AddScoped<IRequestHandler<GetPlacesQuery, List<Place>>, GetPlacesHandler>()
+                .AddScoped<IRequestHandler<GetMeetingPointQuery, Place>, GetMeetingPointHandler>()
                 .AddTransient<IArtistsRepository, ArtistsRepositoryMongoDb>()
                 .AddTransient<IUsersRepository, UsersRepositoryMongoDb>()
                 .AddTransient<IPerformancesRepository, PerformancesRepositoryMongoDb>()

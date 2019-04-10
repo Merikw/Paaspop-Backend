@@ -11,7 +11,7 @@ namespace PaaspopService.Domain.Entities
         public bool WantsWeatherForecast { get; set; } = true;
         public bool WantsWaterDrinkNotification { get; set; } = true;
         public LocationCoordinate CurrentLocation { get; set; } = null;
-        public ISet<Performance> FavoritePerformances { get; set; } = new HashSet<Performance>();
+        public ISet<string> FavoritePerformances { get; set; } = new HashSet<string>();
         public string NotificationToken { get; set; }
     }
 }

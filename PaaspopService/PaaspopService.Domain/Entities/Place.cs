@@ -22,28 +22,17 @@ namespace PaaspopService.Domain.Entities
 
         public Percentage CalculateCrowdPercentage(int userCount, int amountOfUsers, Operator mathOperator)
         {
-            if (UsersOnPlace.Count > 0)
-            {
-                if (UsersOnPlace.Count - amountOfUsers > 0 && mathOperator == Operator.Plus)
-                {
-                    CrowdPercentage = new Percentage(UsersOnPlace.Count - amountOfUsers, userCount);
-                }
-                else if(UsersOnPlace.Count + amountOfUsers > 0 && mathOperator == Operator.Minus)
-                {
-                    CrowdPercentage = new Percentage(UsersOnPlace.Count - amountOfUsers, userCount);
-                }
-            }
-
-            var peopleOnLocation = (double) userCount * CrowdPercentage.AbsolutePercentage / 100;
+            var crowdPercentage = UsersOnPlace.Count;
             if (mathOperator == Operator.Plus)
             {
-                peopleOnLocation = peopleOnLocation + amountOfUsers;
+                crowdPercentage = crowdPercentage + amountOfUsers;
             }
-            else
+            else if (mathOperator == Operator.Minus)
             {
-                peopleOnLocation = peopleOnLocation - amountOfUsers;
+                crowdPercentage = crowdPercentage - amountOfUsers;
             }
-            return new Percentage(peopleOnLocation, (double) userCount);
+
+            return crowdPercentage >= 0 ? new Percentage(crowdPercentage, (double)userCount) : CrowdPercentage;
         }
     }
 }
