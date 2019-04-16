@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
@@ -19,12 +23,14 @@ namespace PaaspopService.Application.Infrastructure.Tasks
     public static class GetPerformancesTask
     {
         private static readonly List<string> genres = new List<string> {"rap", "trap", "hip hop"};
+        private const string REGEX = @"[^a-zA-Z]+";
 
         public static async Task<IWebHost> GetPerformances(this IWebHost webHost)
         {
             var serviceScopeFactory = (IServiceScopeFactory) webHost.Services.GetService(typeof(IServiceScopeFactory));
             var accessToken = await GetSpotifyAccesstoken();
             genres.AddRange(await GetGenres(accessToken));
+            var summariesAndArtists = GetSummariesOfArtists();
 
             using (var scope = serviceScopeFactory.CreateScope())
             {
@@ -50,7 +56,29 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                         var endTime = (string) performance.end;
                         var photo = (string) performance.photo;
                         var stageName = (string) stage.title;
-                        var artistName = (string) performance.title;
+                        var artistNameStrangeChars = (string) performance.title;
+                        var artistName = artistNameStrangeChars.Contains("&#8217;")
+                            ? artistNameStrangeChars.Replace("&#8217;", "'")
+                            : artistNameStrangeChars.Contains("&amp;")
+                                ? artistNameStrangeChars.Replace("&amp;", "&")
+                                : artistNameStrangeChars;
+                        summariesAndArtists.TryGetValue(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX,""),
+                            out var summary);
+                        if (artistName.Contains("Rage"))
+                        {
+                            var test = Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, "");
+                        }
+                    
+                        if (IsNullOrEmpty(summary))
+                            foreach (var (artistNameText, summaryText) in summariesAndArtists)
+                            {
+                                if (!Regex.Replace(artistNameText.ToLowerInvariant().Trim(), REGEX, "")
+                                        .Contains(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX,
+                                            ""))) continue;
+                                summary = summaryText;
+                                break;
+                            }
+
                         switch ((string) performance.day)
                         {
                             case "Vrijdag":
@@ -76,9 +104,10 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                                 ImageLink = photo != null
                                     ? new UrlLink("https:" + (string) performance.photo)
                                     : null,
-                                Name = artistName.Contains("&#8217;") ? artistName.Replace("&#8217;", "'") :
-                                    artistName.Contains("&amp;") ? artistName.Replace("&amp;", "&") : artistName,
-                                Summary = performance.title
+                                Name = artistName,
+                                Summary = IsNullOrEmpty(summary)
+                                    ? "Er is geen beschrijving voor deze artiest gevonden."
+                                    : summary
                             },
                             InterestPercentage = new Percentage(0),
                             PerformanceTime = IsNullOrEmpty(startTime) || IsNullOrEmpty(endTime)
@@ -175,6 +204,49 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                 if (exception.InnerException.GetType() == typeof(IOException))
                     return await SetGenresOfArtist(performance, accessToken);
                 return performance;
+            }
+        }
+
+        private static Dictionary<string, string> GetSummariesOfArtists()
+        {
+            try
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(),
+                    "..\\PaaspopService.Application\\Infrastructure\\assets\\artiesten.docx");
+                var wordPackage = Package.Open(path, FileMode.Open, FileAccess.Read);
+                var artistsWithSummary = new Dictionary<string, string>();
+                using (var wordDocument = WordprocessingDocument.Open(wordPackage))
+                {
+                    var paragraphs = wordDocument.MainDocumentPart.Document.Body.Elements<Paragraph>();
+                    var first = true;
+                    var artistName = "";
+                    foreach (var paragraph in paragraphs)
+                    {
+                        var text = paragraph.InnerText;
+                        if (IsNullOrEmpty(text)) continue;
+                        if (first)
+                        {
+                            artistName = text;
+                            first = false;
+                            continue;
+                        }
+
+                        if (artistsWithSummary.ContainsKey(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, "")))
+                        {
+                            first = true;
+                            continue;
+                        }
+
+                        artistsWithSummary.Add(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, ""), text);
+                        first = true;
+                    }
+                }
+
+                return artistsWithSummary;
+            }
+            catch (Exception e)
+            {
+                return new Dictionary<string, string>();
             }
         }
     }
