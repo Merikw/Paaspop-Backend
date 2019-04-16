@@ -212,7 +212,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             try
             {
                 var path = Path.Combine(Directory.GetCurrentDirectory(),
-                    "..\\PaaspopService.Application\\Infrastructure\\assets\\artiesten.docx");
+                    "../PaaspopService.Application/Infrastructure/assets/artiesten.docx");
                 var wordPackage = Package.Open(path, FileMode.Open, FileAccess.Read);
                 var artistsWithSummary = new Dictionary<string, string>();
                 using (var wordDocument = WordprocessingDocument.Open(wordPackage))
