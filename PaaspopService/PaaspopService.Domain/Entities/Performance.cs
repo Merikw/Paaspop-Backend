@@ -55,7 +55,7 @@ namespace PaaspopService.Domain.Entities
         {
             var favoriteGenres = favoritesFromUser.SelectMany(p => p.Artist.Genres).ToList().GroupBy(item => item).OrderByDescending(group => group.Count()).Select(g => g.Key).Take(3).ToList();
             return performances.Where(p => favoritesFromUser.All(fp => fp.Id != p.Id)).OrderByDescending(performance =>
-                performance.Artist.Genres.Intersect(favoriteGenres).Count()).Take(10).ToList();
+                performance.Artist.Genres.Intersect(favoriteGenres).Count()).Take(15).ToList();
         }
     }
 }

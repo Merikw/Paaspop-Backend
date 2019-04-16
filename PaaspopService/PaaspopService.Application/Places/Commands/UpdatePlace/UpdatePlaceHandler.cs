@@ -23,4 +23,4 @@ namespace PaaspopService.Application.Places.Commands.UpdatePlace
             return placeToBeUpdated;
         }
     }
-}
+} 

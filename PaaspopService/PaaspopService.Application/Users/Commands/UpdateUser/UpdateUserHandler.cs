@@ -54,15 +54,22 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
             var userCount = await _usersRepository.GetUsersCountAsync();
             foreach (var place in places)
             {
-                if (place.GetDistanceFrom(user.CurrentLocation).AbsoluteDistance >= 10 ||
+                if (place.GetDistanceFrom(user.CurrentLocation).AbsoluteDistance >= 10 &&
                     place.UsersOnPlace.Contains(user.Id))
                 {
+                    place.CrowdPercentage = place.CalculateCrowdPercentage(Convert.ToInt32(userCount), 1, Operator.Minus);
                     place.UsersOnPlace.Remove(user.Id);
+                    await Mediator.Send(new UpdatePlaceCommand { PlaceToBeUpdated = place });
                     continue;
                 }
 
-                place.UsersOnPlace.Add(user.Id);
+                if (place.UsersOnPlace.Contains(user.Id) || place.GetDistanceFrom(user.CurrentLocation).AbsoluteDistance >= 10)
+                {
+                    continue;
+                }
+
                 place.CrowdPercentage = place.CalculateCrowdPercentage(Convert.ToInt32(userCount), 1, Operator.Plus);
+                place.UsersOnPlace.Add(user.Id);
                 await Mediator.Send(new UpdatePlaceCommand {PlaceToBeUpdated = place});
             }
         }
@@ -70,17 +77,17 @@ namespace PaaspopService.Application.Users.Commands.UpdateUser
         private async Task<ISet<string>> UpdatePerformancesFromUser(User user)
         {
             var performances = await Mediator.Send(new GetPerformancesQuery {UserId = user.Id});
-            var toBeAddedFavorites = new List<string>();
-            var toBeRemovedFavorites = new List<string>();
+            var toBeAddedFavorites = new HashSet<string>();
+            var toBeRemovedFavorites = new HashSet<string>();
             var newListOfFavorites = user.FavoritePerformances;
             foreach (var performancesValue in performances.Performances.Values)
             {
-                toBeRemovedFavorites.AddRange(
+                toBeRemovedFavorites.UnionWith(
                     performancesValue.Where(p => p.UsersFavoritedPerformance.Contains(user.Id)
                                                  && user.FavoritePerformances.All(up => up != p.Id)).Select(p => p.Id)
                 );
 
-                toBeAddedFavorites.AddRange(
+                toBeAddedFavorites.UnionWith(
                     performancesValue.Where(p => !p.UsersFavoritedPerformance.Contains(user.Id)
                                                  && user.FavoritePerformances.Any(up => up == p.Id)).Select(p => p.Id)
                 );

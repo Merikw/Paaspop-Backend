@@ -31,7 +31,6 @@ namespace PaaspopService.Application.Performances.Queries.GetPerformances
             if (favoritePerformancesFromUser.Count >= 5)
             {
                 var suggestions = Performance.GetSuggestions(favoritePerformancesFromUser, performances);
-                ;
                 mappedResult.SuggestionPerformances = suggestions;
                 mappedResult.Performances.Add("Suggesties voor jou!", suggestions);
             }

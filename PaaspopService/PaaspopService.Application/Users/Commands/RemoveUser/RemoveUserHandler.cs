@@ -29,6 +29,7 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
         public override async Task<Unit> Handle(RemoveUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _usersRepository.GetUserByIdAsync(request.UserId);
+            if(user == null) return Unit.Value;
             var performances = await _mediator.Send(new GetPerformancesQuery {UserId = user.Id}, cancellationToken);
             var places = await _mediator.Send(new GetPlacesQuery(), cancellationToken);
             await _usersRepository.RemoveUserAsync(request.UserId);
@@ -67,9 +68,9 @@ namespace PaaspopService.Application.Users.Commands.RemoveUser
             }
             else
             {
-                place.UsersOnPlace.Remove(user.Id);
                 place.CrowdPercentage =
                     place.CalculateCrowdPercentage(userCount, 1, Operator.Minus);
+                place.UsersOnPlace.Remove(user.Id);
             }
 
             await Mediator.Send(new UpdatePlaceCommand {PlaceToBeUpdated = place});
