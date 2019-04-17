@@ -248,7 +248,8 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             catch (Exception e)
             {
                 var dict = new Dictionary<string, string>();
-                dict.Add("kraantjepappie", e.Message + " with path " + path);
+                var subdirstring = Directory.GetDirectories(Directory.GetCurrentDirectory()).Aggregate("", (current, subdir) => current + " - " + subdir);
+                dict.Add("kraantjepappie", "Parent: " + Directory.GetParent(Directory.GetCurrentDirectory()) + " parent parent " + Directory.GetParent(Directory.GetCurrentDirectory()).Parent + " subs: " + subdirstring);
                 return dict;
             }
         }
