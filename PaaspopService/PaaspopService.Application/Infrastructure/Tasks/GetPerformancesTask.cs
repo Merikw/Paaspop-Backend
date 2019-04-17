@@ -209,9 +209,10 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 
         private static Dictionary<string, string> GetSummariesOfArtists()
         {
+            var path = "";
             try
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(),
+                path = Path.Combine(Directory.GetCurrentDirectory(),
                     "../PaaspopService.Application/Infrastructure/assets/artiesten.docx");
                 var wordPackage = Package.Open(path, FileMode.Open, FileAccess.Read);
                 var artistsWithSummary = new Dictionary<string, string>();
@@ -247,7 +248,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             catch (Exception e)
             {
                 var dict = new Dictionary<string, string>();
-                dict.Add("kraantjepappie", e.Message);
+                dict.Add("kraantjepappie", e.Message + " with path " + path);
                 return dict;
             }
         }
