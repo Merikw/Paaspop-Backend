@@ -14,9 +14,9 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
         {
             var thisCombination = GetCombination(Distance, Place.CrowdPercentage);
             var otherCombination = other.GetCombination(other.Distance, other.Place.CrowdPercentage);
-            if (thisCombination > otherCombination) return 1;
+            if (thisCombination > otherCombination) return -1;
             if (thisCombination == otherCombination) return 0;
-            return -1;
+            return 1;
         }
 
         public int GetCombination(Distance distance, Percentage crowdPercentage)
