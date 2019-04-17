@@ -27,10 +27,11 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 
         public static async Task<IWebHost> GetPerformances(this IWebHost webHost)
         {
+            var hostingEnvironment = (IHostingEnvironment)webHost.Services.GetService(typeof(IHostingEnvironment));
             var serviceScopeFactory = (IServiceScopeFactory) webHost.Services.GetService(typeof(IServiceScopeFactory));
             var accessToken = await GetSpotifyAccesstoken();
             genres.AddRange(await GetGenres(accessToken));
-            var summariesAndArtists = GetSummariesOfArtists();
+            var summariesAndArtists = GetSummariesOfArtists(hostingEnvironment);
 
             using (var scope = serviceScopeFactory.CreateScope())
             {
@@ -207,13 +208,21 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             }
         }
 
-        private static Dictionary<string, string> GetSummariesOfArtists()
+        private static Dictionary<string, string> GetSummariesOfArtists(IHostingEnvironment hostingEnvironment)
         {
             var path = "";
             try
             {
-                path = Path.Combine(Directory.GetCurrentDirectory(),
-                    "../PaaspopService.Application/Infrastructure/assets/artiesten.docx");
+                if (hostingEnvironment.EnvironmentName == "Development")
+                {
+                    path = Path.Combine(Directory.GetCurrentDirectory(),
+                        "../PaaspopService.Application/Infrastructure/assets/artiesten.docx");
+                }
+                else
+                {
+                    path = "artiesten.docx";
+                }
+
                 var wordPackage = Package.Open(path, FileMode.Open, FileAccess.Read);
                 var artistsWithSummary = new Dictionary<string, string>();
                 using (var wordDocument = WordprocessingDocument.Open(wordPackage))
@@ -247,9 +256,13 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             }
             catch (Exception e)
             {
+                var files = "";
+                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory()))
+                {
+                    files = file + file;
+                }
                 var dict = new Dictionary<string, string>();
-                var subdirstring = Directory.GetDirectories(Directory.GetCurrentDirectory()).Aggregate("", (current, subdir) => current + " - " + subdir);
-                dict.Add("kraantjepappie", "Parent: " + Directory.GetParent(Directory.GetCurrentDirectory()) + " parent parent " + Directory.GetParent(Directory.GetCurrentDirectory()).Parent + " subs: " + subdirstring);
+                dict.Add("kraantjepappie", e.Message + " with path " + path + " files: " + files);
                 return dict;
             }
         }

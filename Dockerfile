@@ -21,4 +21,5 @@ RUN dotnet publish "PaaspopService.WebApi.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+COPY COPY ./PaaspopService/PaaspopService.Application/Infrastructure/assets/artiesten.docx .
 ENTRYPOINT ["dotnet", "PaaspopService.WebApi.dll", "--urls", "http://*:8080;http://*:8081" ]
