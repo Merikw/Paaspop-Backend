@@ -246,7 +246,9 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             }
             catch (Exception e)
             {
-                return new Dictionary<string, string>();
+                var dict = new Dictionary<string, string>();
+                dict.Add("kraantjepappie", e.Message);
+                return dict;
             }
         }
     }
