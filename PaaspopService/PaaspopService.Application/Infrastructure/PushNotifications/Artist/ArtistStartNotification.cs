@@ -36,6 +36,15 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                         minute = 60 + minute;
                     }
 
+                    if(hour - 2 <= 0)
+                    {
+                        hour = 24 + (hour - 2);
+                    }
+                    else
+                    {
+                        hour = hour - 2;
+                    }
+
                     var job = JobBuilder.Create<ArtistStartsJob>()
                         .WithIdentity("job" + performance.Id, "ArtistPlays")
                         .Build();
@@ -48,7 +57,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                     var simpleTrigger = (ISimpleTrigger) TriggerBuilder.Create()
                         .WithIdentity("trigger" + performance.Id, "ArtistPlays")
                         .StartAt(new DateTimeOffset(2019, 4, performance.PerformanceTime.Day + 14,
-                            hour - 2, minute, 0, TimeSpan.Zero))
+                            hour, minute, 0, TimeSpan.Zero))
                         .ForJob("job" + performance.Id, "ArtistPlays")
                         .Build();
 
