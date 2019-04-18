@@ -29,7 +29,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 
                 var cronTrigger = (ICronTrigger) TriggerBuilder.Create()
                     .WithIdentity("trigger" + "weather", "ArtistPlays")
-                    .WithCronSchedule("0 0 8-23 ? * * *")
+                    .WithCronSchedule("0 0 10,12,14,16,18,20,22 ? * * *")
                     .ForJob("job" + "weather", "WeatherForecast")
                     .Build();
 

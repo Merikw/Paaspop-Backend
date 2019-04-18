@@ -29,7 +29,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
 
                 var cronTrigger = (ICronTrigger) TriggerBuilder.Create()
                     .WithIdentity("trigger" + "waterdrink", "waterdrink")
-                    .WithCronSchedule("0 0 10,12,14,16,18,20,22 ? * * *")
+                    .WithCronSchedule("0 0 9,11,13,15,17,19,21,23 ? * * *")
                     .ForJob("job" + "waterdrink", "waterdrink")
                     .Build();
 
