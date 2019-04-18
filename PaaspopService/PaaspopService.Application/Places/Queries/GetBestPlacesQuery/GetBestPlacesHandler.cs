@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using PaaspopService.Application.Infrastructure;
 using PaaspopService.Application.Infrastructure.Repositories;
+using PaaspopService.Common.Handlers;
 
 namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
 {
@@ -25,10 +26,10 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
             foreach (var place in places)
             {
                 List<BestPlace> bestPlacesList;
-                if (bestPlacesDict.ContainsKey(place.Type.ToString()))
+                if (bestPlacesDict.ContainsKey(place.Type.GetDescription()))
                 {
-                    bestPlacesDict.TryGetValue(place.Type.ToString(), out bestPlacesList);
-                    bestPlacesDict.Remove(place.Type.ToString());
+                    bestPlacesDict.TryGetValue(place.Type.GetDescription(), out bestPlacesList);
+                    bestPlacesDict.Remove(place.Type.GetDescription());
                 }
                 else
                 {
