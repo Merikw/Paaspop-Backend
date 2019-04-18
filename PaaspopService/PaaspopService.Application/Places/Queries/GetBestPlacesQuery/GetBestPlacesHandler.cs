@@ -38,7 +38,7 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
 
                 bestPlacesList?.Add(Mapper.Map<BestPlace>(place,
                     opt => opt.Items["userlocation"] = request.UserLocationCoordinate));
-                bestPlacesDict.Add(place.Type.ToString(), bestPlacesList);
+                bestPlacesDict.Add(place.Type.GetDescription(), bestPlacesList);
                 if (maxPercentage < place.CrowdPercentage.AbsolutePercentage)
                     maxPercentage = place.CrowdPercentage.AbsolutePercentage;
             }
