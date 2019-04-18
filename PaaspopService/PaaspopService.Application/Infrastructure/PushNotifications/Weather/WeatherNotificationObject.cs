@@ -11,7 +11,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
         public WeatherNotificationObject(int descriptionId, int temperature, int timeInMilliseconds)
         {
             Title =
-                $"Om {GetHourFromMilliSeconds(timeInMilliseconds)} uur wordt het {Convert.ToString(temperature)} graden met {GetDescriptionFromId(descriptionId)}";
+                $"Om {GetHourFromMilliSeconds(timeInMilliseconds)}:00 uur wordt het {Convert.ToString(temperature)} graden met {GetDescriptionFromId(descriptionId)}";
             Description = GetTitleFromIdAndTemperature(descriptionId, temperature);
         }
 
