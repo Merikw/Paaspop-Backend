@@ -27,6 +27,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                 foreach (var performance in performances)
                 {
                     if (performance.PerformanceTime == null) continue;
+                    if (performance.PerformanceTime.Day != 5 || performance.PerformanceTime.Day != 6 || performance.PerformanceTime.Day != 7) continue;
                     int.TryParse(performance.PerformanceTime.StartTime.Substring(0, 2), out var hour);
                     int.TryParse(performance.PerformanceTime.StartTime.Substring(3, 2), out var minute);
                     minute = minute - 10;
@@ -54,10 +55,12 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                     job.JobDataMap.Put("hour", hour);
                     job.JobDataMap.Put("minute", minute);
 
-                    var simpleTrigger = (ISimpleTrigger) TriggerBuilder.Create()
+                    var cronString = "0 " + minute + " " + hour + " " + (14 + performance.PerformanceTime.Day) +
+                                     " APR ? 2019";
+
+                    var simpleTrigger = (ICronTrigger) TriggerBuilder.Create()
                         .WithIdentity("trigger" + performance.Id, "ArtistPlays")
-                        .StartAt(DateBuilder.DateOf(hour, minute, 0, 
-                            performance.PerformanceTime.Day + 14, 4, 2019))
+                        .WithCronSchedule(cronString)
                         .ForJob("job" + performance.Id, "ArtistPlays")
                         .Build();
 
