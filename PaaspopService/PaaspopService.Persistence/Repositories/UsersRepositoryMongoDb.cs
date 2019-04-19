@@ -51,7 +51,7 @@ namespace PaaspopService.Persistence.Repositories
 
         public async Task<List<User>> GetUsersByFavorites(string performanceId)
         {
-            var filter = Builders<User>.Filter.ElemMatch(u => u.FavoritePerformances, f => f == performanceId);
+            var filter = Builders<User>.Filter.Where(user => user.FavoritePerformances.Contains(performanceId));
             var result = await DbContext.GetUsers().FindAsync(filter);
             var userList = await result.ToListAsync();
             return userList;
