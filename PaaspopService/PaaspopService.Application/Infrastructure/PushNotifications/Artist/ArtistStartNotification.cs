@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using PaaspopService.Application.Infrastructure.Repositories;
+using PaaspopService.Common.Handlers;
 using Quartz;
 using Quartz.Impl;
 
@@ -27,7 +28,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                 foreach (var performance in performances)
                 {
                     if (performance.PerformanceTime == null) continue;
-                    if (performance.PerformanceTime.Day != 5 || performance.PerformanceTime.Day != 6 || performance.PerformanceTime.Day != 7) continue;
+                    if (!BetweenHandler.IsInBetween(performance.PerformanceTime.Day, 5, 7)) continue;
                     int.TryParse(performance.PerformanceTime.StartTime.Substring(0, 2), out var hour);
                     int.TryParse(performance.PerformanceTime.StartTime.Substring(3, 2), out var minute);
                     minute = minute - 10;
@@ -62,14 +63,21 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
 
                     var cronString = "0 " + minute + " " + hour + " " + (14 + performance.PerformanceTime.Day) +
                                      " APR ? 2019";
+                    try
+                    {
+                        var simpleTrigger = (ICronTrigger) TriggerBuilder.Create()
+                            .WithIdentity("trigger" + performance.Id, "ArtistPlays")
+                            .WithCronSchedule(cronString)
+                            .ForJob("job" + performance.Id, "ArtistPlays")
+                            .Build();
 
-                    var simpleTrigger = (ICronTrigger) TriggerBuilder.Create()
-                        .WithIdentity("trigger" + performance.Id, "ArtistPlays")
-                        .WithCronSchedule(cronString)
-                        .ForJob("job" + performance.Id, "ArtistPlays")
-                        .Build();
+                        await scheduler.ScheduleJob(job, simpleTrigger);
 
-                    await scheduler.ScheduleJob(job, simpleTrigger);
+                    }
+                    catch (Exception e)
+                    {
+                        var ex = e;
+                    }
                 }
             }
 
