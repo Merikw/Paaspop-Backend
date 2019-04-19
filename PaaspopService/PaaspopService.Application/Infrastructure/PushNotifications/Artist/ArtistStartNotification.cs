@@ -56,8 +56,8 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
 
                     var simpleTrigger = (ISimpleTrigger) TriggerBuilder.Create()
                         .WithIdentity("trigger" + performance.Id, "ArtistPlays")
-                        .StartAt(new DateTimeOffset(2019, 4, performance.PerformanceTime.Day + 14,
-                            hour, minute, 0, TimeSpan.Zero))
+                        .StartAt(DateBuilder.DateOf(hour, minute, 0, 
+                            performance.PerformanceTime.Day + 14, 4, 2019))
                         .ForJob("job" + performance.Id, "ArtistPlays")
                         .Build();
 
