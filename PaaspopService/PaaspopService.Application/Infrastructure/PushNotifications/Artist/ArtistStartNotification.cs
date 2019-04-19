@@ -46,6 +46,11 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                         hour = hour - 2;
                     }
 
+                    if (hour == 0)
+                    {
+                        performance.PerformanceTime.Day = performance.PerformanceTime.Day + 1;
+                    }
+
                     var job = JobBuilder.Create<ArtistStartsJob>()
                         .WithIdentity("job" + performance.Id, "ArtistPlays")
                         .Build();
