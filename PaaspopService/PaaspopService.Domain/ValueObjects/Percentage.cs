@@ -23,7 +23,7 @@ namespace PaaspopService.Domain.ValueObjects
                 var percentage = partOfTotal / total * 100;
                 if (partOfTotal <= total && partOfTotal >= 0 && total >= 0)
                 {
-                    AbsolutePercentage = (int) percentage;
+                    AbsolutePercentage = (int) Math.Ceiling(percentage);
                 }
                 else
                 {
