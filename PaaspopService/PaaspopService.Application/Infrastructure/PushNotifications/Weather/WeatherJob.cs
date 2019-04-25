@@ -9,9 +9,8 @@ using Quartz;
 
 namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 {
-    public class WeatherJob : IJob
+    public class WeatherJob : Job, IJob
     {
-        private const string sendLink = "https://fcm.googleapis.com/fcm/send";
         private static readonly string openWeatherLink = "http://api.openweathermap.org/data/2.5/forecast?lat=51.642618&lon=5.4175&appid="
                                                         + Environment.GetEnvironmentVariable("OPEN_WEATHER_APPID") + "&units=metric";
 
@@ -33,30 +32,8 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 
             foreach (var user in users)
             {
-                var messageInformation = new Notification
-                {
-                    NotificationMessage = new NotificationMessage
-                    {
-                        Title = weatherNotificationObject.Title,
-                        Body = weatherNotificationObject.Description
-                    },
-                    DeviceToken = user.NotificationToken
-                };
-
-                var authorizationKey = $"key={Environment.GetEnvironmentVariable("FCM_KEY")}";
-                var jsonBody = JsonConvert.SerializeObject(messageInformation);
-
-                using (var client = new HttpClient())
-                {
-                    using (var httpRequest =
-                        new HttpRequestMessage(HttpMethod.Post, sendLink))
-                    {
-                        httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
-                        httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                        await client.SendAsync(httpRequest);
-                    }
-                }
+                await SendNotification(JsonConvert.SerializeObject(CreateNotification(weatherNotificationObject.Title,
+                    weatherNotificationObject.Description, user.NotificationToken)));
             }
         }
     }

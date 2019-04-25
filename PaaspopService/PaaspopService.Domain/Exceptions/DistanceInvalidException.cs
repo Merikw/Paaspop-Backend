@@ -12,7 +12,7 @@ namespace PaaspopService.Domain.Exceptions
         {
         }
 
-        public DistanceInvalidException(SerializationInfo info, StreamingContext context)
+        protected DistanceInvalidException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
