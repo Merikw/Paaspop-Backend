@@ -7,7 +7,7 @@ using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Domain.Entities
 {
-    public class Performance : Model, IComparable<Performance>
+    public sealed class Performance : Model, IComparable<Performance>
     {
         public PerformanceTime PerformanceTime { get; set; }
         public Percentage InterestPercentage { get; set; }
