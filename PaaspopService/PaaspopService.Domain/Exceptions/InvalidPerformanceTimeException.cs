@@ -12,7 +12,7 @@ namespace PaaspopService.Domain.Exceptions
         {
         }
 
-        public InvalidPerformanceTimeException(SerializationInfo info, StreamingContext context)
+        protected InvalidPerformanceTimeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

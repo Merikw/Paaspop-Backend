@@ -17,7 +17,7 @@ namespace PaaspopService.Domain.Exceptions
         {
         }
 
-        public AgeInvalidException(SerializationInfo info, StreamingContext context)
+        protected AgeInvalidException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

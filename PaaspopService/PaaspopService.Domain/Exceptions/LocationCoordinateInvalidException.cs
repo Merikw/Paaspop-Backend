@@ -12,7 +12,7 @@ namespace PaaspopService.Domain.Exceptions
         {
         }
 
-        public LocationCoordinateInvalidException(SerializationInfo info, StreamingContext context)
+        protected LocationCoordinateInvalidException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

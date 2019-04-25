@@ -12,7 +12,7 @@ namespace PaaspopService.Domain.Exceptions
         {
         }
 
-        public PercentageInvalidException(SerializationInfo info, StreamingContext context)
+        protected PercentageInvalidException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

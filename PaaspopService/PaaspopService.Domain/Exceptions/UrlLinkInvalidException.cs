@@ -12,7 +12,7 @@ namespace PaaspopService.Domain.Exceptions
         {
         }
 
-        public UrlLinkInvalidException(SerializationInfo info, StreamingContext context)
+        protected UrlLinkInvalidException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

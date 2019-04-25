@@ -27,6 +27,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
         private const string spotifyTokenLink = "https://accounts.spotify.com/api/token";
         private const string genresLink = "https://api.spotify.com/v1/recommendations/available-genre-seeds";
         private const string timetableLink = "https://www.paaspop.nl/json/timetable";
+        private const string spotifyGenreSearchLink = "https://api.spotify.com/v1/search?q=";
 
         public static async Task<IWebHost> GetPerformances(this IWebHost webHost)
         {
@@ -52,7 +53,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                     {
                         foreach (var stage in day)
                         {
-                            InsertArtistFromStageJson(stage, performancesRepository, summariesAndArtists,
+                            await InsertArtistFromStageJson(stage, performancesRepository, summariesAndArtists,
                                 accessToken);
                         }
                     }
@@ -108,23 +109,15 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                     Artist = new Artist
                     {
                         Genres = new HashSet<string>(),
-                        ImageLink = photo != null
-                            ? new UrlLink("https:" + (string)performance.photo)
-                            : null,
+                        ImageLink = GetImageLink(photo, performance),
                         Name = artistName,
-                        Summary = IsNullOrEmpty(summary)
-                            ? "Er is geen beschrijving voor deze artiest gevonden."
-                            : summary
+                        Summary = GetSummary(summary)
                     },
                     InterestPercentage = new Percentage(0),
-                    PerformanceTime = IsNullOrEmpty(startTime) || IsNullOrEmpty(endTime)
-                        ? null
-                        : new PerformanceTime(dayOfWeek, startTime, endTime),
+                    PerformanceTime = GetPerformanceTime(startTime, endTime, dayOfWeek),
                     Stage = new Stage
                     {
-                        Name = stageName.Contains("&#8217;")
-                            ? stageName.Replace("&#8217;", "'")
-                            : stageName
+                        Name = GetStageName(stageName)
                     }
                 };
 
@@ -147,13 +140,46 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             return "";
         }
 
+        private static string GetStageName(string stageName)
+        {
+            return stageName.Contains("&#8217;")
+                ? stageName.Replace("&#8217;", "'")
+                : stageName;
+        }
+
+        private static PerformanceTime GetPerformanceTime(string startTime, string endTime, int dayOfWeek)
+        {
+            return IsNullOrEmpty(startTime) || IsNullOrEmpty(endTime)
+                ? null
+                : new PerformanceTime(dayOfWeek, startTime, endTime);
+        }
+
+        private static string GetSummary(string summary)
+        {
+            return IsNullOrEmpty(summary)
+                ? "Er is geen beschrijving voor deze artiest gevonden."
+                : summary;
+        }
+
+        private static string GetImageLink(string photo, dynamic performance)
+        {
+            return photo != null
+                ? new UrlLink("https:" + (string) performance.photo)
+                : null;
+        }
+
+        private static string GetArtistNameAmpersand(string artistNameStrangeChars)
+        {
+            return artistNameStrangeChars.Contains("&amp;")
+                ? artistNameStrangeChars.Replace("&amp;", "&")
+                : artistNameStrangeChars;
+        }
+
         private static string GetArtistName(string artistNameStrangeChars)
         {
             return artistNameStrangeChars.Contains("&#8217;")
                 ? artistNameStrangeChars.Replace("&#8217;", "'")
-                : artistNameStrangeChars.Contains("&amp;")
-                    ? artistNameStrangeChars.Replace("&amp;", "&")
-                    : artistNameStrangeChars;
+                : GetArtistNameAmpersand(artistNameStrangeChars);
         }
 
         private static async Task<string> GetSpotifyAccesstoken()
@@ -204,26 +230,17 @@ namespace PaaspopService.Application.Infrastructure.Tasks
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                    var response = await client.GetAsync("https://api.spotify.com/v1/search?q=" +
+                    var response = await client.GetAsync(spotifyGenreSearchLink +
                                                          performance.Artist.Name + "&type=artist&limit=1");
                     if (response.StatusCode != HttpStatusCode.OK) return performance;
                     dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                     var items = jsonObject.artists.items;
                     foreach (var item in items)
-                    foreach (var genre in item.genres)
                     {
-                        if (performance.Artist.Genres.Count >= 3) continue;
-                        var genreText = (string) genre;
-                        var foundGenres = genres.Where(g => genreText.Contains(g)).ToList();
-                        if (foundGenres.Count <= 0) continue;
-                        if (foundGenres.Count == 1)
-                            performance.Artist.Genres.Add(char.ToUpper(foundGenres[0][0]) +
-                                                          foundGenres[0].Substring(1));
-                        else
-                            foreach (var foundGenre in foundGenres)
-                                performance.Artist.Genres.Add(char.ToUpper(foundGenre[0]) + foundGenre.Substring(1));
-
-                        if (genreText.Contains("dutch")) performance.Artist.Genres.Add("Nederlands");
+                        foreach (var genre in item.genres)
+                        {
+                            AddGenreToArtist(genre, performance);
+                        }
                     }
 
                     return performance;
@@ -232,9 +249,33 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             catch (HttpRequestException exception)
             {
                 if (exception.InnerException.GetType() == typeof(IOException))
+                {
                     return await SetGenresOfArtist(performance, accessToken);
+                }
+
                 return performance;
             }
+        }
+
+        private static void AddGenreToArtist(dynamic genre, Performance performance)
+        {
+            var genreText = (string)genre;
+            var foundGenres = genres.Where(g => genreText.Contains(g)).ToList();
+            if (performance.Artist.Genres.Count >= 3 || foundGenres.Count <= 0) return;
+            if (foundGenres.Count == 1)
+            {
+                performance.Artist.Genres.Add(char.ToUpper(foundGenres[0][0]) +
+                                              foundGenres[0].Substring(1));
+                return;
+            }
+
+            foreach (var foundGenre in foundGenres)
+            {
+                performance.Artist.Genres.Add(
+                    char.ToUpper(foundGenre[0]) + foundGenre.Substring(1));
+            }
+
+            if (genreText.Contains("dutch")) performance.Artist.Genres.Add("Nederlands");
         }
 
         private static Dictionary<string, string> GetSummariesOfArtists(IHostingEnvironment hostingEnvironment)
@@ -258,7 +299,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 
                 return artistsWithSummary;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new Dictionary<string, string>();
             }
