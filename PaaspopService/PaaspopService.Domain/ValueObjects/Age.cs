@@ -7,7 +7,7 @@ namespace PaaspopService.Domain.ValueObjects
 {
     public class Age : ValueObject
     {
-        public int AbsoluteAge;
+        public int AbsoluteAge { get; set; }
 
         private Age()
         {

@@ -22,8 +22,11 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 {
     public static class GetPerformancesTask
     {
+        private const string sendUrl = "https://fcm.googleapis.com/fcm/send";
         private static readonly List<string> genres = new List<string> {"rap", "trap", "hip hop"};
         private const string REGEX = @"[^a-zA-Z]+";
+        private const string spotifyTokenUrl = "https://accounts.spotify.com/api/token";
+        private const string genresUrl = "https://api.spotify.com/v1/recommendations/available-genre-seeds";
 
         public static async Task<IWebHost> GetPerformances(this IWebHost webHost)
         {
@@ -40,94 +43,117 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 
                 using (var client = new HttpClient())
                 {
-                    var response = await client.GetAsync("https://www.paaspop.nl/json/timetable");
+                    var response = await client.GetAsync(sendUrl);
                     response.EnsureSuccessStatusCode();
                     dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                     dynamic[] days =
                         {jsonObject.timetable.Vrijdag, jsonObject.timetable.Zaterdag, jsonObject.timetable.Zondag};
                     foreach (var day in days)
-                    foreach (var stage in day)
-                    foreach (var performance in stage.acts)
                     {
-                        if (performance.id == null) continue;
-                        if (await performancesRepository.GetPerformanceByPerformanceId((string) performance.id) !=
-                            null) continue;
-                        var dayOfWeek = 0;
-                        var startTime = (string) performance.start;
-                        var endTime = (string) performance.end;
-                        var photo = (string) performance.photo;
-                        var stageName = (string) stage.title;
-                        var artistNameStrangeChars = (string) performance.title;
-                        var artistName = artistNameStrangeChars.Contains("&#8217;")
-                            ? artistNameStrangeChars.Replace("&#8217;", "'")
-                            : artistNameStrangeChars.Contains("&amp;")
-                                ? artistNameStrangeChars.Replace("&amp;", "&")
-                                : artistNameStrangeChars;
-                        summariesAndArtists.TryGetValue(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX,""),
-                            out var summary);
-                        if (artistName.Contains("Rage"))
+                        foreach (var stage in day)
                         {
-                            var test = Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, "");
+                            InsertArtistFromStageJson(stage, performancesRepository, summariesAndArtists,
+                                accessToken);
                         }
-                    
-                        if (IsNullOrEmpty(summary))
-                            foreach (var (artistNameText, summaryText) in summariesAndArtists)
-                            {
-                                if (!Regex.Replace(artistNameText.ToLowerInvariant().Trim(), REGEX, "")
-                                        .Contains(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX,
-                                            ""))) continue;
-                                summary = summaryText;
-                                break;
-                            }
-
-                        switch ((string) performance.day)
-                        {
-                            case "Vrijdag":
-                                dayOfWeek = 5;
-                                break;
-                            case "Zaterdag":
-                                dayOfWeek = 6;
-                                break;
-                            case "Zondag":
-                                dayOfWeek = 7;
-                                break;
-                            default:
-                                dayOfWeek = 5;
-                                break;
-                        }
-
-                        var newPerformance = new Performance
-                        {
-                            PerformanceId = performance.id,
-                            Artist = new Artist
-                            {
-                                Genres = new HashSet<string>(),
-                                ImageLink = photo != null
-                                    ? new UrlLink("https:" + (string) performance.photo)
-                                    : null,
-                                Name = artistName,
-                                Summary = IsNullOrEmpty(summary)
-                                    ? "Er is geen beschrijving voor deze artiest gevonden."
-                                    : summary
-                            },
-                            InterestPercentage = new Percentage(0),
-                            PerformanceTime = IsNullOrEmpty(startTime) || IsNullOrEmpty(endTime)
-                                ? null
-                                : new PerformanceTime(dayOfWeek, startTime, endTime),
-                            Stage = new Stage
-                            {
-                                Name = stageName.Contains("&#8217;") ? stageName.Replace("&#8217;", "'") : stageName
-                            }
-                        };
-
-                        newPerformance = await SetGenresOfArtist(newPerformance, accessToken);
-
-                        await performancesRepository.InsertPerformance(newPerformance);
                     }
                 }
             }
 
             return webHost;
+        }
+
+        private static async Task InsertArtistFromStageJson(dynamic stage, IPerformancesRepository performancesRepository, IReadOnlyDictionary<string, string> summariesAndArtists, string accessToken)
+        {
+            foreach (var performance in stage.acts)
+            {
+                if (performance.id == null) continue;
+                if (await performancesRepository
+                        .GetPerformanceByPerformanceId((string)performance.id) !=
+                    null) continue;
+                var dayOfWeek = 0;
+                var startTime = (string)performance.start;
+                var endTime = (string)performance.end;
+                var photo = (string)performance.photo;
+                var stageName = (string)stage.title;
+                var artistNameStrangeChars = (string)performance.title;
+                var artistName = GetArtistName(artistNameStrangeChars);
+                summariesAndArtists.TryGetValue(
+                    Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, ""),
+                    out var summary);
+
+                if (IsNullOrEmpty(summary))
+                {
+                    summary = GetSummaryFromDict(summariesAndArtists, artistName);
+                }
+
+                switch ((string)performance.day)
+                {
+                    case "Vrijdag":
+                        dayOfWeek = 5;
+                        break;
+                    case "Zaterdag":
+                        dayOfWeek = 6;
+                        break;
+                    case "Zondag":
+                        dayOfWeek = 7;
+                        break;
+                    default:
+                        dayOfWeek = 5;
+                        break;
+                }
+
+                var newPerformance = new Performance
+                {
+                    PerformanceId = performance.id,
+                    Artist = new Artist
+                    {
+                        Genres = new HashSet<string>(),
+                        ImageLink = photo != null
+                            ? new UrlLink("https:" + (string)performance.photo)
+                            : null,
+                        Name = artistName,
+                        Summary = IsNullOrEmpty(summary)
+                            ? "Er is geen beschrijving voor deze artiest gevonden."
+                            : summary
+                    },
+                    InterestPercentage = new Percentage(0),
+                    PerformanceTime = IsNullOrEmpty(startTime) || IsNullOrEmpty(endTime)
+                        ? null
+                        : new PerformanceTime(dayOfWeek, startTime, endTime),
+                    Stage = new Stage
+                    {
+                        Name = stageName.Contains("&#8217;")
+                            ? stageName.Replace("&#8217;", "'")
+                            : stageName
+                    }
+                };
+
+                newPerformance = await SetGenresOfArtist(newPerformance, accessToken);
+
+                await performancesRepository.InsertPerformance(newPerformance);
+            }
+        }
+
+        private static string GetSummaryFromDict(IReadOnlyDictionary<string, string> summariesAndArtists, string artistName)
+        {
+            foreach (var (artistNameText, summaryText) in summariesAndArtists)
+            {
+                if (!Regex.Replace(artistNameText.ToLowerInvariant().Trim(), REGEX, "")
+                    .Contains(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX,
+                        ""))) continue;
+                return summaryText;
+            }
+
+            return "";
+        }
+
+        private static string GetArtistName(string artistNameStrangeChars)
+        {
+            return artistNameStrangeChars.Contains("&#8217;")
+                ? artistNameStrangeChars.Replace("&#8217;", "'")
+                : artistNameStrangeChars.Contains("&amp;")
+                    ? artistNameStrangeChars.Replace("&amp;", "&")
+                    : artistNameStrangeChars;
         }
 
         private static async Task<string> GetSpotifyAccesstoken()
@@ -144,7 +170,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             };
             using (var client = new HttpClient())
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token")
+                var request = new HttpRequestMessage(HttpMethod.Post, spotifyTokenUrl)
                     {Content = new FormUrlEncodedContent(postData)};
                 var response = await client.SendAsync(request);
                 dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
@@ -154,18 +180,21 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 
         private static async Task<List<string>> GetGenres(string accessToken)
         {
-            var genres = new List<string>();
+            var genresFromSpotify = new List<string>();
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var response =
-                    await client.GetAsync("https://api.spotify.com/v1/recommendations/available-genre-seeds");
-                if (response.StatusCode != HttpStatusCode.OK) return genres;
+                    await client.GetAsync(genresUrl);
+                if (response.StatusCode != HttpStatusCode.OK) return genresFromSpotify;
                 dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
-                foreach (var genre in jsonObject.genres) genres.Add((string) genre);
+                foreach (var genre in jsonObject.genres)
+                {
+                    genresFromSpotify.Add((string) genre);
+                }
             }
 
-            return genres;
+            return genresFromSpotify;
         }
 
         private static async Task<Performance> SetGenresOfArtist(Performance performance, string accessToken)
@@ -225,45 +254,43 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 
                 var wordPackage = Package.Open(path, FileMode.Open, FileAccess.Read);
                 var artistsWithSummary = new Dictionary<string, string>();
-                using (var wordDocument = WordprocessingDocument.Open(wordPackage))
-                {
-                    var paragraphs = wordDocument.MainDocumentPart.Document.Body.Elements<Paragraph>();
-                    var first = true;
-                    var artistName = "";
-                    foreach (var paragraph in paragraphs)
-                    {
-                        var text = paragraph.InnerText;
-                        if (IsNullOrEmpty(text)) continue;
-                        if (first)
-                        {
-                            artistName = text;
-                            first = false;
-                            continue;
-                        }
-
-                        if (artistsWithSummary.ContainsKey(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, "")))
-                        {
-                            first = true;
-                            continue;
-                        }
-
-                        artistsWithSummary.Add(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, ""), text);
-                        first = true;
-                    }
-                }
+                GetArtistsSummaryFromWord(wordPackage, artistsWithSummary);
 
                 return artistsWithSummary;
             }
             catch (Exception e)
             {
-                var files = "";
-                foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory()))
+                return new Dictionary<string, string>();
+            }
+        }
+
+        private static void GetArtistsSummaryFromWord(Package wordPackage, Dictionary<string, string> artistsWithSummary)
+        {
+            using (var wordDocument = WordprocessingDocument.Open(wordPackage))
+            {
+                var paragraphs = wordDocument.MainDocumentPart.Document.Body.Elements<Paragraph>();
+                var first = true;
+                var artistName = "";
+                foreach (var paragraph in paragraphs)
                 {
-                    files = file + file;
+                    var text = paragraph.InnerText;
+                    if (IsNullOrEmpty(text)) continue;
+                    if (first)
+                    {
+                        artistName = text;
+                        first = false;
+                        continue;
+                    }
+
+                    if (artistsWithSummary.ContainsKey(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, "")))
+                    {
+                        first = true;
+                        continue;
+                    }
+
+                    artistsWithSummary.Add(Regex.Replace(artistName.ToLowerInvariant().Trim(), REGEX, ""), text);
+                    first = true;
                 }
-                var dict = new Dictionary<string, string>();
-                dict.Add("kraantjepappie", e.Message + " with path " + path + " files: " + files);
-                return dict;
             }
         }
     }

@@ -81,8 +81,9 @@ namespace PaaspopService.WebApi
                 {
                     BsonClassMap.RegisterClassMap<GeneralMapper>();
                 }
-                catch (ArgumentException exception)
+                catch (ArgumentException)
                 {
+                    // ignored
                 }
 
             services.Configure<MongoDbSettings>(options =>

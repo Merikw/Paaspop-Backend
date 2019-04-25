@@ -20,7 +20,7 @@ namespace PaaspopService.Domain.ValueObjects
                 throw new UrlLinkInvalidException(urlText);
         }
 
-        public string UrlText;
+        public string UrlText { get; set; }
 
         public static implicit operator string(UrlLink urlLink)
         {

@@ -2,6 +2,10 @@
 {
     public class GeneralMapper
     {
+        protected GeneralMapper()
+        {
+        }
+
         public static void Map()
         {
             ArtistMapper.Map();

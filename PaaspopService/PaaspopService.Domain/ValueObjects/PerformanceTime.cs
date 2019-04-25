@@ -8,10 +8,10 @@ namespace PaaspopService.Domain.ValueObjects
 {
     public class PerformanceTime : ValueObject
     {
-        public int Day;
-        public string EndTime;
-        public string PerformanceTimeText;
-        public string StartTime;
+        public int Day { get; set; }
+        public string EndTime { get; set; }
+        public string PerformanceTimeText { get; set; }
+        public string StartTime { get; set; }
 
         private PerformanceTime()
         {

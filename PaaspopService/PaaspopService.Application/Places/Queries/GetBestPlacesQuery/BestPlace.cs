@@ -12,16 +12,31 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
 
         public int CompareTo(BestPlace other)
         {
-            var thisCombination = GetCombination(Distance, Place.CrowdPercentage);
-            var otherCombination = other.GetCombination(other.Distance, other.Place.CrowdPercentage);
-            if (thisCombination > otherCombination) return 1;
-            if (thisCombination == otherCombination) return 0;
+            if (this > other) return 1;
+            if (this == other) return 0;
             return -1;
         }
 
-        public int GetCombination(Distance distance, Percentage crowdPercentage)
+        public static int GetCombination(Distance distance, Percentage crowdPercentage)
         {
             return distance.AbsoluteDistance + crowdPercentage.AbsolutePercentage * 2;
+        }
+
+        public static bool operator == (BestPlace left, BestPlace right)
+        {
+            return left?.Equals(right) ?? ReferenceEquals(right, null);
+        }
+        public static bool operator > (BestPlace left, BestPlace right)
+        {
+            return decimal.Compare(GetCombination(left.Distance, left.CrowdPercentage), GetCombination(right.Distance, right.CrowdPercentage)) > 0;
+        }
+        public static bool operator < (BestPlace left, BestPlace right)
+        {
+            return decimal.Compare(GetCombination(left.Distance, left.CrowdPercentage), GetCombination(right.Distance, right.CrowdPercentage)) < 0;
+        }
+        public static bool operator != (BestPlace left, BestPlace right)
+        {
+            return !(left == right);
         }
     }
 }

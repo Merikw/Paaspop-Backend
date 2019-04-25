@@ -7,7 +7,7 @@ namespace PaaspopService.Domain.ValueObjects
 {
     public class Distance : ValueObject
     {
-        public int AbsoluteDistance;
+        public int AbsoluteDistance { get; set; }
 
         private Distance()
         {

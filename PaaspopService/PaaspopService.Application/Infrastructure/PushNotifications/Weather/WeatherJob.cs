@@ -11,6 +11,10 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 {
     public class WeatherJob : IJob
     {
+        private const string sendUrl = "https://fcm.googleapis.com/fcm/send";
+        private static readonly string openWeatherUrl = "http://api.openweathermap.org/data/2.5/forecast?lat=51.642618&lon=5.4175&appid="
+                                                        + Environment.GetEnvironmentVariable("OPEN_WEATHER_APPID") + "&units=metric";
+
         public async Task Execute(IJobExecutionContext context)
         {
             WeatherNotificationObject weatherNotificationObject;
@@ -19,10 +23,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
 
             using (var client = new HttpClient())
             {
-                var response = await client.GetAsync(
-                    "http://api.openweathermap.org/data/2.5/forecast?lat=51.642618&lon=5.4175&appid="
-                    + Environment.GetEnvironmentVariable("OPEN_WEATHER_APPID") + "&units=metric",
-                    HttpCompletionOption.ResponseHeadersRead);
+                var response = await client.GetAsync(openWeatherUrl, HttpCompletionOption.ResponseHeadersRead);
                 response.EnsureSuccessStatusCode();
                 dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                 weatherNotificationObject = new WeatherNotificationObject(
@@ -48,12 +49,12 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Weather
                 using (var client = new HttpClient())
                 {
                     using (var httpRequest =
-                        new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send"))
+                        new HttpRequestMessage(HttpMethod.Post, sendUrl))
                     {
                         httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
                         httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                        var response = await client.SendAsync(httpRequest);
+                        await client.SendAsync(httpRequest);
                     }
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -38,11 +39,13 @@ namespace PaaspopService.Application.Infrastructure.Requests
 
         public void LogErrors(List<ValidationFailure> failures)
         {
+            var failuresString = new StringBuilder();
             foreach (var failure in failures)
             {
+                failuresString.Append(failures.Last().Equals(failure) ? failure.ErrorMessage + " " : failure.ErrorMessage + " - ");
                 _logger.LogError(failure.ErrorMessage);
-                throw new CustomValidationException(failure);
             }
+            throw new CustomValidationException(failuresString.ToString());
         }
     }
 }

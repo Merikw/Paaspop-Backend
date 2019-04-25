@@ -11,6 +11,8 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
 {
     public class ArtistStartsJob : IJob
     {
+        private const string sendUrl = "https://fcm.googleapis.com/fcm/send";
+
         public async Task Execute(IJobExecutionContext context)
         {
             var performance = (Performance) context.MergedJobDataMap["performance"];
@@ -35,7 +37,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                 using (var client = new HttpClient())
                 {
                     using (var httpRequest =
-                        new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send"))
+                        new HttpRequestMessage(HttpMethod.Post, sendUrl))
                     {
                         httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
                         httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");

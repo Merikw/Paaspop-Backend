@@ -20,8 +20,8 @@ namespace PaaspopService.Domain.ValueObjects
             Longitude = longitude;
         }
 
-        public double Latitude;
-        public double Longitude;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         protected override IEnumerable<object> GetAtomicValues()
         {

@@ -10,6 +10,8 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
 {
     public class WaterDrinkJob : IJob
     {
+        private const string sendUrl = "https://fcm.googleapis.com/fcm/send";
+
         public async Task Execute(IJobExecutionContext context)
         {
             var userRepository = (IUsersRepository) context.MergedJobDataMap["usersRepository"];
@@ -34,12 +36,12 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
                 using (var client = new HttpClient())
                 {
                     using (var httpRequest =
-                        new HttpRequestMessage(HttpMethod.Post, "https://fcm.googleapis.com/fcm/send"))
+                        new HttpRequestMessage(HttpMethod.Post, sendUrl))
                     {
                         httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
                         httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-                        var response = await client.SendAsync(httpRequest);
+                        await client.SendAsync(httpRequest);
                     }
                 }
             }

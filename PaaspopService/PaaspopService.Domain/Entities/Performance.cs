@@ -20,19 +20,8 @@ namespace PaaspopService.Domain.Entities
         {
             if (PerformanceTime == null) return 1;
             if (other.PerformanceTime == null) return -1;
-            if (PerformanceTime.Day == other.PerformanceTime.Day &&
-                BetweenHandler.IsInBetween(Convert.ToInt32(PerformanceTime.StartTime.Substring(0, 2)), 0, 8) &&
-                 !BetweenHandler.IsInBetween(Convert.ToInt32(other.PerformanceTime.StartTime.Substring(0, 2)), 0, 8))
-            {
-                return 1;
-            }
-
-            if (PerformanceTime.Day == other.PerformanceTime.Day &&
-                !BetweenHandler.IsInBetween(Convert.ToInt32(PerformanceTime.StartTime.Substring(0, 2)), 0, 8) &&
-                BetweenHandler.IsInBetween(Convert.ToInt32(other.PerformanceTime.StartTime.Substring(0, 2)), 0, 8))
-            {
-                return -1;
-            }
+            if (this > other) return 1;
+            if (this < other) return -1;
             return string.Compare(PerformanceTime.PerformanceTimeText, other.PerformanceTime.PerformanceTimeText, StringComparison.Ordinal);
         }
             
@@ -53,9 +42,30 @@ namespace PaaspopService.Domain.Entities
 
         public static List<Performance> GetSuggestions(List<Performance> favoritesFromUser, List<Performance> performances)
         {
-            var favoriteGenres = favoritesFromUser.SelectMany(p => p.Artist.Genres).ToList().GroupBy(item => item).OrderByDescending(group => group.Count()).Select(g => g.Key).Take(3).ToList();
+            var favoriteGenres = favoritesFromUser.SelectMany(p => p.Artist.Genres).GroupBy(item => item).OrderByDescending(group => group.Count()).Select(g => g.Key).Take(3);
             return performances.Where(p => favoritesFromUser.All(fp => fp.Id != p.Id)).OrderByDescending(performance =>
                 performance.Artist.Genres.Intersect(favoriteGenres).Count()).Take(10).ToList();
+        }
+
+        public static bool operator == (Performance left, Performance right)
+        {
+            return left?.Equals(right) ?? ReferenceEquals(right, null);
+        }
+        public static bool operator > (Performance left, Performance right)
+        {
+            return left.PerformanceTime.Day == right.PerformanceTime.Day &&
+                   BetweenHandler.IsInBetween(Convert.ToInt32(left.PerformanceTime.StartTime.Substring(0, 2)), 0, 8) &&
+                   !BetweenHandler.IsInBetween(Convert.ToInt32(right.PerformanceTime.StartTime.Substring(0, 2)), 0, 8);
+        }
+        public static bool operator < (Performance left, Performance right)
+        {
+            return left.PerformanceTime.Day == right.PerformanceTime.Day &&
+                   !BetweenHandler.IsInBetween(Convert.ToInt32(left.PerformanceTime.StartTime.Substring(0, 2)), 0, 8) &&
+                   BetweenHandler.IsInBetween(Convert.ToInt32(right.PerformanceTime.StartTime.Substring(0, 2)), 0, 8);
+        }
+        public static bool operator != (Performance left, Performance right)
+        {
+            return !(left == right);
         }
     }
 }

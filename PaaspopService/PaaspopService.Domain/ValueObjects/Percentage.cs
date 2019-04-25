@@ -40,7 +40,7 @@ namespace PaaspopService.Domain.ValueObjects
                 throw new PercentageInvalidException(absolutePercentage);
         }
 
-        public int AbsolutePercentage;
+        public int AbsolutePercentage { get; set; }
 
         public static implicit operator string(Percentage percentage)
         {
