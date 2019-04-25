@@ -4,7 +4,7 @@ using PaaspopService.Domain.ValueObjects;
 
 namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
 {
-    public class BestPlace : IComparable<BestPlace>
+    public sealed class BestPlace : IComparable<BestPlace>
     {
         public Place Place { get; set; }
         public Distance Distance { get; set; }
@@ -47,7 +47,7 @@ namespace PaaspopService.Application.Places.Queries.GetBestPlacesQuery
             return !(left == right);
         }
 
-        protected bool Equals(BestPlace other)
+        private bool Equals(BestPlace other)
         {
             return Equals(Place, other.Place) && Equals(Distance, other.Distance) && Equals(CrowdPercentage, other.CrowdPercentage);
         }

@@ -82,7 +82,7 @@ namespace PaaspopService.Domain.Entities
             return !(left == right);
         }
 
-        protected bool Equals(Performance other)
+        private bool Equals(Performance other)
         {
             return Equals(PerformanceTime, other.PerformanceTime) 
                    && Equals(InterestPercentage, other.InterestPercentage)
