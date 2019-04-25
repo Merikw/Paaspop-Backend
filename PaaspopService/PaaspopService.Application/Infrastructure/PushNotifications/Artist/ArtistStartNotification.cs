@@ -43,27 +43,9 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                 int.TryParse(performance.PerformanceTime.StartTime.Substring(0, 2), out var hour);
                 int.TryParse(performance.PerformanceTime.StartTime.Substring(3, 2), out var minute);
                 minute = minute - 10;
-                if (minute < 0)
-                {
-                    hour = hour == 0 ? 23 : hour - 1;
-                    minute = 60 + minute;
-                }
+                SetTime(ref minute, ref hour, performance);
 
-                if (hour - 2 <= 0)
-                {
-                    hour = 24 + (hour - 2);
-                }
-                else
-                {
-                    hour = hour - 2;
-                }
-
-                if (hour == 0)
-                {
-                    performance.PerformanceTime.Day = performance.PerformanceTime.Day + 1;
-                }
-
-                var job = JobBuilder.Create<ArtistStartsJob>()
+                 var job = JobBuilder.Create<ArtistStartsJob>()
                     .WithIdentity("job" + performance.Id, "ArtistPlays")
                     .Build();
 
@@ -89,6 +71,29 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Artist
                 {
                     // ignored
                 }
+            }
+        }
+
+        private static void SetTime(ref int minute, ref int hour, Performance performance)
+        {
+            if (minute < 0)
+            {
+                hour = hour == 0 ? 23 : hour - 1;
+                minute = 60 + minute;
+            }
+
+            if (hour - 2 <= 0)
+            {
+                hour = 24 + (hour - 2);
+            }
+            else
+            {
+                hour = hour - 2;
+            }
+
+            if (hour == 0)
+            {
+                performance.PerformanceTime.Day = performance.PerformanceTime.Day + 1;
             }
         }
     }

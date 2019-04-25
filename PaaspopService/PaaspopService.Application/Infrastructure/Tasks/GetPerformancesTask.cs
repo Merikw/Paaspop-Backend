@@ -22,11 +22,11 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 {
     public static class GetPerformancesTask
     {
-        private const string sendUrl = "https://fcm.googleapis.com/fcm/send";
         private static readonly List<string> genres = new List<string> {"rap", "trap", "hip hop"};
         private const string REGEX = @"[^a-zA-Z]+";
-        private const string spotifyTokenUrl = "https://accounts.spotify.com/api/token";
-        private const string genresUrl = "https://api.spotify.com/v1/recommendations/available-genre-seeds";
+        private const string spotifyTokenLink = "https://accounts.spotify.com/api/token";
+        private const string genresLink = "https://api.spotify.com/v1/recommendations/available-genre-seeds";
+        private const string timetableLink = "https://www.paaspop.nl/json/timetable";
 
         public static async Task<IWebHost> GetPerformances(this IWebHost webHost)
         {
@@ -43,7 +43,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
 
                 using (var client = new HttpClient())
                 {
-                    var response = await client.GetAsync(sendUrl);
+                    var response = await client.GetAsync(timetableLink);
                     response.EnsureSuccessStatusCode();
                     dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                     dynamic[] days =
@@ -170,7 +170,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             };
             using (var client = new HttpClient())
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, spotifyTokenUrl)
+                var request = new HttpRequestMessage(HttpMethod.Post, spotifyTokenLink)
                     {Content = new FormUrlEncodedContent(postData)};
                 var response = await client.SendAsync(request);
                 dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
@@ -185,7 +185,7 @@ namespace PaaspopService.Application.Infrastructure.Tasks
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var response =
-                    await client.GetAsync(genresUrl);
+                    await client.GetAsync(genresLink);
                 if (response.StatusCode != HttpStatusCode.OK) return genresFromSpotify;
                 dynamic jsonObject = JObject.Parse(await response.Content.ReadAsStringAsync());
                 foreach (var genre in jsonObject.genres)

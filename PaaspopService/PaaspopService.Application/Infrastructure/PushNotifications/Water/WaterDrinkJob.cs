@@ -10,7 +10,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
 {
     public class WaterDrinkJob : IJob
     {
-        private const string sendUrl = "https://fcm.googleapis.com/fcm/send";
+        private const string sendLink = "https://fcm.googleapis.com/fcm/send";
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -36,7 +36,7 @@ namespace PaaspopService.Application.Infrastructure.PushNotifications.Water
                 using (var client = new HttpClient())
                 {
                     using (var httpRequest =
-                        new HttpRequestMessage(HttpMethod.Post, sendUrl))
+                        new HttpRequestMessage(HttpMethod.Post, sendLink))
                     {
                         httpRequest.Headers.TryAddWithoutValidation("Authorization", authorizationKey);
                         httpRequest.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");

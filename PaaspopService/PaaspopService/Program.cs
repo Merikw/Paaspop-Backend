@@ -15,7 +15,7 @@ namespace PaaspopService.WebApi
 
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().GetPerformances().GetAwaiter().GetResult()
+            CreateWebHostBuilder(args).Build()
                 .ScheduleArtistStartNotifications().GetAwaiter().GetResult()
                 .ScheduleWeatherNotification().GetAwaiter().GetResult()
                 .ScheduleWaterDrinkNotification().GetAwaiter().GetResult()
