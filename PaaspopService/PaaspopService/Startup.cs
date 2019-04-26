@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -30,6 +32,7 @@ using PaaspopService.Persistence.Contexts;
 using PaaspopService.Persistence.Mappers;
 using PaaspopService.Persistence.Repositories;
 using PaaspopService.Persistence.Settings;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PaaspopService.WebApi
 {
@@ -54,6 +57,14 @@ namespace PaaspopService.WebApi
 
             services.AddAutoMapper();
             services.AddMediatR(typeof(Startup));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Paaspop service API", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             services
                 .AddSingleton<IDbContext, MongoDbContext>()
@@ -104,6 +115,12 @@ namespace PaaspopService.WebApi
                 app.UseHsts();
 
             app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Paaspop service API");
+                c.RoutePrefix = string.Empty;
+            });
             app.UseMvc();
         }
     }

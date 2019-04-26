@@ -37,18 +37,6 @@ namespace ClassTests
         }
 
         [Fact]
-        public void CalculateCrowdPercentage_wrong_null_pointer()
-        {
-            var place = new Place
-            {
-                CrowdPercentage = new Percentage(12, 100)
-            };
-
-            for (var i = 0; i < 12; i++) place.UsersOnPlace.Add(i.ToString());
-
-            Assert.Throws<PercentageInvalidException>(() => place.CalculateCrowdPercentage(0, 1, Operator.Plus));
-        }
-        [Fact]
         public void CalculateCrowdPercentage_correct_minus()
         {
             var place = new Place

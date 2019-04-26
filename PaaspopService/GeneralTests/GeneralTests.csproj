@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PaaspopService.Common\PaaspopService.Common.csproj" />
+    <ProjectReference Include="..\PaaspopService.Domain\PaaspopService.Domain.csproj" />
   </ItemGroup>
 
 </Project>

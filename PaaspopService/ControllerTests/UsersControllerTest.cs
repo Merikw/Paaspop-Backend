@@ -37,6 +37,11 @@ namespace ControllerTests
             return await GeneralControllerTest.Instance.Client.DeleteAsync("/api/users/" + id);
         }
 
+        public async Task<HttpResponseMessage> GetFavoritePerformancesFromUser(string id)
+        {
+            return await GeneralControllerTest.Instance.Client.GetAsync("/api/users/favoritePerformances/" + id);
+        }
+
         [Fact]
         public async Task CreateUser_Correct()
         {
@@ -151,6 +156,21 @@ namespace ControllerTests
         public async Task RemoveUser_Wrong_Id()
         {
             var response = await DeleteUser("1234567890123456789012345");
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Get_User_Favorites_Correct()
+        {
+            var response = await GetFavoritePerformancesFromUser("123456789012345678901234");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+
+        [Fact]
+        public async Task Get_User_Favorites_Wrong_Id()
+        {
+            var response = await GetFavoritePerformancesFromUser("123456789012345678901234%");
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }

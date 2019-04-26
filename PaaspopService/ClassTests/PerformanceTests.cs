@@ -50,19 +50,5 @@ namespace ClassTests
             Assert.Throws<PercentageInvalidException>(
                 () => performance.CalculateInterestPercentage(1, 1, Operator.Plus));
         }
-
-        [Fact]
-        public void CalculateInterestPercentage_wrong_null_pointer()
-        {
-            var performance = new Performance
-            {
-                InterestPercentage = new Percentage(12, 100)
-            };
-
-            for (var i = 0; i < 12; i++) performance.UsersFavoritedPerformance.Add(i.ToString());
-
-            Assert.Throws<PercentageInvalidException>(
-                () => performance.CalculateInterestPercentage(0, 1, Operator.Plus));
-        }
     }
 }

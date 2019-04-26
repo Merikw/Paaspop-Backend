@@ -15,11 +15,13 @@ namespace PaaspopService.WebApi
 
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build()
-                .ScheduleArtistStartNotifications().GetAwaiter().GetResult()
-                .ScheduleWeatherNotification().GetAwaiter().GetResult()
-                .ScheduleWaterDrinkNotification().GetAwaiter().GetResult()
-                .RemoveCrowdsOnPlace().GetAwaiter().GetResult().Run();
+            //CreateWebHostBuilder(args).Build()
+            //    .ScheduleArtistStartNotifications().GetAwaiter().GetResult()
+            //    .ScheduleWeatherNotification().GetAwaiter().GetResult()
+            //    .ScheduleWaterDrinkNotification().GetAwaiter().GetResult()
+            //    .RemoveCrowdsOnPlace().GetAwaiter().GetResult().Run();
+
+            CreateWebHostBuilder(args).Build().Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)

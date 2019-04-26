@@ -2,6 +2,7 @@ using System;
 using FluentAssertions;
 using PaaspopService.Common.DistanceBetweenCoordinates;
 using PaaspopService.Common.Handlers;
+using PaaspopService.Domain.Enumerations;
 using Xunit;
 
 namespace GeneralTests
@@ -32,6 +33,14 @@ namespace GeneralTests
             var result = Convert.ToInt32(DistanceBetweenCoordinates.GetDistanceInMeters(51.441642, 5.4697225, 51.5077637, 5.3978482));
 
             result.Should().Be(8879);
+        }
+
+        [Fact]
+        public void GetEnumDescription()
+        {
+            var result = PlaceType.Bar.GetDescription();
+
+            result.Should().Be("Bars");
         }
     }
 }

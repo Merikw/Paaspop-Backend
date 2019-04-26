@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PaaspopService.Domain.Infrastructure.ValueObject" Collapsed="true">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAgAAAAAAAAAAAAIAAAAAAAACAQAA=</HashCode>
+      <FileName>Infrastructure\ValueObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.ValueObjects.Age">
+    <Position X="3.25" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ValueObjects\Age.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.ValueObjects.Distance">
+    <Position X="9.25" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ValueObjects\Distance.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.ValueObjects.LocationCoordinate">
+    <Position X="14.25" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ValueObjects\LocationCoordinate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.ValueObjects.Percentage">
+    <Position X="0.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAIAAAAAAAAAAEAAAAAAAAAAIAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ValueObjects\Percentage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.ValueObjects.PerformanceTime">
+    <Position X="6.25" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAIAAAAAAAAAAAIAAAIAAiAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ValueObjects\PerformanceTime.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.ValueObjects.UrlLink">
+    <Position X="11.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAEAAAAAAAAAAAAAAAAAABAIAAAQAA=</HashCode>
+      <FileName>ValueObjects\UrlLink.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.Entities.Artist">
+    <Position X="10.25" Y="7" Width="1.5" />
+    <AssociationLine Name="Genres" Type="System.String">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.932" Y="-0.121" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Artist.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Genres" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="PaaspopService.Domain.Entities.Model">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Model.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PaaspopService.Domain.Entities.Performance">
+    <Position X="4.75" Y="7" Width="2.25" />
+    <AssociationLine Name="Artist" Type="PaaspopService.Domain.Entities.Artist">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.35" Y="1.047" Height="0.182" Width="0.753" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="InterestPercentage" Type="PaaspopService.Domain.ValueObjects.Percentage" ManuallyRouted="true">
+      <Path>
+        <Point X="4.75" Y="9.504" />
+        <Point X="4.302" Y="9.504" />
+        <Point X="4.302" Y="12.381" />
+        <Point X="1.219" Y="12.381" />
+        <Point X="1.219" Y="4.204" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.479" Y="0.231" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="PerformanceTime" Type="PaaspopService.Domain.ValueObjects.PerformanceTime">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.541" Y="0.324" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Stage" Type="PaaspopService.Domain.Entities.Stage">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.202" Y="0.471" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="UsersFavoritedPerformance" Type="System.String" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.875" Y="10.608" />
+        <Point X="5.875" Y="11.5" />
+        <Point X="4.385" Y="11.5" Type="JumpStart" />
+        <Point X="4.218" Y="11.5" Type="JumpEnd" />
+        <Point X="3.75" Y="11.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="1.091" Y="-0.142" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAQAgACAAgAAQYAEAIAAAAgAAAABByA=</HashCode>
+      <FileName>Entities\Performance.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Artist" />
+      <Property Name="InterestPercentage" />
+      <Property Name="PerformanceTime" />
+      <Property Name="Stage" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="UsersFavoritedPerformance" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PaaspopService.Domain.Entities.Place">
+    <Position X="7.5" Y="7" Width="2.25" />
+    <AssociationLine Name="CrowdPercentage" Type="PaaspopService.Domain.ValueObjects.Percentage">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.572" Y="0.696" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Location" Type="PaaspopService.Domain.ValueObjects.LocationCoordinate" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="9.125" Y="8.877" />
+        <Point X="9.125" Y="9.127" />
+        <Point X="10.51" Y="9.127" Type="JumpStart" />
+        <Point X="10.677" Y="9.127" Type="JumpEnd" />
+        <Point X="10.917" Y="9.127" Type="JumpStart" />
+        <Point X="11.083" Y="9.127" Type="JumpEnd" />
+        <Point X="12.917" Y="9.127" Type="JumpStart" />
+        <Point X="13.083" Y="9.127" Type="JumpEnd" />
+        <Point X="15.5" Y="9.127" />
+        <Point X="15.5" Y="3.819" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.386" Y="0.293" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Type" Type="PaaspopService.Domain.Enumerations.PlaceType">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.271" Y="0.308" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="UsersOnPlace" Type="System.String">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.734" Y="-0.087" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAACAAIAAAQAAAEAAAAAAQAAAAAAAAg=</HashCode>
+      <FileName>Entities\Place.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CrowdPercentage" />
+      <Property Name="Location" />
+      <Property Name="Type" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="UsersOnPlace" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="PaaspopService.Domain.Entities.Stage">
+    <Position X="12.25" Y="7" Width="1.5" />
+    <AssociationLine Name="Location" Type="PaaspopService.Domain.ValueObjects.LocationCoordinate">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.35" Y="0.323" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Stage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Location" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PaaspopService.Domain.Entities.User">
+    <Position X="2" Y="7" Width="2.25" />
+    <AssociationLine Name="Age" Type="PaaspopService.Domain.ValueObjects.Age">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.121" Y="0.258" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="FavoritePerformances" Type="System.String">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.755" Y="0.567" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Gender" Type="PaaspopService.Domain.Enumerations.Gender">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.188" Y="-0.064" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAACAAEAAAQgAAAAAAAAAAEAAABAAAAA=</HashCode>
+      <FileName>Entities\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Age" />
+      <Property Name="Gender" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="FavoritePerformances" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="System.String" Collapsed="true">
+    <Position X="2.25" Y="11" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Orientation="Bottom" Position="0.1" />
+  </Class>
+  <Enum Name="PaaspopService.Domain.Enumerations.Gender">
+    <Position X="17.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Enumerations\Gender.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PaaspopService.Domain.Enumerations.Operator">
+    <Position X="19" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAACAAAAEAAAA=</HashCode>
+      <FileName>Enumerations\Operator.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PaaspopService.Domain.Enumerations.PlaceType">
+    <Position X="17.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAQAAAAAACAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Enumerations\PlaceType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

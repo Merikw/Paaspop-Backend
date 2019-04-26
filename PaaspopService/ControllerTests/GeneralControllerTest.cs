@@ -21,13 +21,6 @@ namespace ControllerTests
 
         public HttpClient Client { get; }
 
-        public static GeneralControllerTest Instance
-        {
-            get
-            {
-                if (instance == null) instance = new GeneralControllerTest();
-                return instance;
-            }
-        }
+        public static GeneralControllerTest Instance => instance ?? (instance = new GeneralControllerTest());
     }
 }
