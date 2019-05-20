@@ -10,5 +10,7 @@ namespace PaaspopService.Application.Infrastructure.Repositories
         Task<List<Place>> GetPlaces();
         Task UpdatePlaceAsync(Place place);
         Task<List<Place>> GetPlacesByType(PlaceType type);
+        Task InsertPlace(Place place);
+        Task<Place> GetPlaceById(string id);
     }
 }

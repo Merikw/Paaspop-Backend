@@ -17,6 +17,18 @@ namespace PaaspopService.Persistence.Repositories
         {
         }
 
+        public async Task InsertPlace(Place place)
+        {
+            await DbContext.GetPlaces().InsertOneAsync(place);
+        }
+
+        public async Task<Place> GetPlaceById(string id)
+        {
+            var filter = Builders<Place>.Filter.Eq("_id", ObjectId.Parse(id));
+            var result = await DbContext.GetPlaces().FindAsync(filter);
+            return result.FirstOrDefault();
+        }
+
         public async Task<List<Place>> GetPlaces()
         {
             var result = await DbContext.GetPlaces().FindAsync(_ => true);
